@@ -3,8 +3,10 @@ package com.nsi.ezcalender.ui
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nsi.ezcalender.impl.ICSReader
 import com.nsi.ezcalender.model.Event
+import kotlinx.coroutines.launch
 import net.fortuna.ical4j.model.ComponentList
 
 
@@ -30,6 +32,10 @@ class MainViewModel(val icsReader: ICSReader = ICSReader()): ViewModel() {
         icsReader.readIcs3()
         val events = icsReader.getEvents()
         _state.value = state.value.copy(eventsList = events)
+    }
+
+    fun openIcsFile() {
+        TODO("Not yet implemented")
     }
 
 }

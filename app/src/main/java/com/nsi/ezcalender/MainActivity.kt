@@ -8,6 +8,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.rememberNavController
 import com.nsi.ezcalender.ui.EzCalenderApp
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.theme.EzCalenderTheme
