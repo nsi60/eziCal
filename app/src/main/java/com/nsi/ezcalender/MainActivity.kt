@@ -1,43 +1,82 @@
 package com.nsi.ezcalender
 
+import android.Manifest
+import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import com.nsi.ezcalender.ui.EzCalenderApp
+import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.theme.EzCalenderTheme
 
+
+var PERMISSIONS = arrayOf(
+    Manifest.permission.MANAGE_EXTERNAL_STORAGE,
+    Manifest.permission.READ_EXTERNAL_STORAGE,
+    Manifest.permission.WRITE_EXTERNAL_STORAGE
+)
+
 class MainActivity : ComponentActivity() {
+
+
+//    private val requestPermissionLauncher =
+//        registerForActivityResult(
+//            ActivityResultContracts.RequestMultiplePermissions()
+//        )
+//        { permissions ->
+//            for (isGranted in permissions.values) {
+//                if (isGranted) {
+//                    println("granted")
+//
+//                    // Permission is granted. Continue the action or workflow in your
+//                    // app.
+//                } else {
+//                    println("not granted")
+//                    // Explain to the user that the feature is unavailable because the
+//                    // features requires a permission that the user has denied. At the
+//                    // same time, respect the user's decision. Don't link to system
+//                    // settings in an effort to convince the user to change their
+//                    // decision.
+//                }
+//            }
+//        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!Environment.isExternalStorageManager()) {
+            val getPermission = Intent()
+            getPermission.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+            startActivity(getPermission)
+        }
+
+//        if (!hasPermission()) {
+//            requestPermissionLauncher.launch(PERMISSIONS)
+//        }
+
+        val mainVewModel: MainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+
         setContent {
             EzCalenderTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+                EzCalenderApp(mainVewModel)
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+//    private fun hasPermission(): Boolean {
+//        var granted = false
+//        for (permission in PERMISSIONS) {
+//            val result =
+//                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+//            granted = granted && result == PackageManager.PERMISSION_GRANTED
+//        }
+//        return granted
+//    }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    EzCalenderTheme {
-        Greeting("Android")
-    }
+
+
+
 }

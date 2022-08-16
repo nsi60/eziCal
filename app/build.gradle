@@ -1,10 +1,12 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.nsi.ezcalender"
@@ -58,4 +60,16 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
+    implementation 'org.mnode.ical4j:ical4j:1.0.5'
+    implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
+    implementation 'commons-codec:commons-codec:1.10'
+    implementation 'commons-lang:commons-lang:2.6'
+
 }
