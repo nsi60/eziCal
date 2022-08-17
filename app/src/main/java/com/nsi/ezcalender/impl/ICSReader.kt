@@ -1,29 +1,33 @@
 package com.nsi.ezcalender.impl
 
-import android.os.Environment
-import com.nsi.ezcalender.model.Event
 //import biweekly.Biweekly
 //import biweekly.ICalendar
 //import biweekly.component.VEvent
+import android.net.Uri
+import android.os.Environment
+import android.provider.ContactsContract.CommonDataKinds.Website.URL
+import com.nsi.ezcalender.model.Event
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.UnfoldingReader
 import net.fortuna.ical4j.model.Component.VEVENT
+import net.fortuna.ical4j.model.Property.URL
 import net.fortuna.ical4j.model.component.VEvent
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileReader
-import java.io.StringReader
+import java.io.*
+import java.net.URL
 import java.util.*
+import javax.inject.Inject
 
 
 //https://www.webdavsystem.com/server/creating_caldav_carddav/calendar_ics_file_structure/
 
 
+const val PICK_ICS_FILE = 2
 
-
-class ICSReader {
+class ICSReader @Inject constructor() {
 
     private val events = mutableListOf<Event>()
+    private val initialFileOpenUri =
+        Uri.parse(Environment.getExternalStorageDirectory().absolutePath + "/Download/")
 
     var string = """
         BEGIN:VCALENDAR
@@ -95,10 +99,40 @@ class ICSReader {
 
     }
 
+
     fun getEvents(): MutableList<Event> {
         println(events)
         return events
     }
 
+    fun readSelectedFile(inputStream: InputStream?,selectedFile: File? = null) {
+//        val fin = UnfoldingReader(
+//            FileReader(selectedFile),
+//            true
+//        )
+
+//        val inputStream = URL("http://airbnb.com/ical/").openStream() //TODO from URL
+//        try {
+//            val cal = CalendarBuilder().build(inputStream)
+//        } finally {
+//            inputStream.close()
+//        }
+
+        val builder = CalendarBuilder()
+
+
+        val calendar = builder.build(inputStream)
+        val events = calendar.components.getComponents(VEVENT)
+        for (event in events) {
+            val nE: VEvent = event as VEvent
+
+            val eventSummary = nE.summary.value
+            val eventLocation = nE.location.value
+            this.events.add(Event(summary = eventSummary, location = eventLocation))
+        }
+    }
+
 
 }
+
+

@@ -1,20 +1,22 @@
 package com.nsi.ezcalender.ui.screens
 
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
+import androidx.compose.ui.platform.LocalContext
 import com.nsi.ezcalender.ui.MainViewModel
-import net.fortuna.ical4j.model.Component
+import java.io.*
+import java.lang.Exception
+
 
 @Composable
 fun HomeScreen(
@@ -24,11 +26,33 @@ fun HomeScreen(
 
 ) {
     val state = mainVewModel.state
+    val context = LocalContext.current
+
+    val intent = remember {
+        Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/calendar"
+        }
+    }
+
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val uri: Uri? = result.data?.data
+        try {
+            // open the user-picked file for reading:
+            val inputStream = context.contentResolver.openInputStream(uri!!)
+            mainVewModel.setSelectedFileInputStream(inputStream)
+            navigateToReadFileScreen()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     HomeScreenContent(
         openFileClicked = {
-                          navigateToReadFileScreen()
-                          },
+            filePickerLauncher.launch(intent)
+        },
         createNewFileClicked = {
             navigateToCreateFileScreen()
         }
@@ -36,7 +60,6 @@ fun HomeScreen(
 
 }
 
-@Preview(showSystemUi = true)
 @Composable
 fun HomeScreenContent(
     openFileClicked: () -> Unit = {},
@@ -61,4 +84,5 @@ fun HomeScreenContent(
         }
     }
 }
+
 

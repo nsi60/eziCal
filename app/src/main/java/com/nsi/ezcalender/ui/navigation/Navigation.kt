@@ -1,6 +1,7 @@
 package com.nsi.ezcalender.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,9 +14,9 @@ import com.nsi.ezcalender.ui.screens.ReadFileScreen
 
 @Composable
 fun NavigationHost(
-    navController: NavHostController = rememberNavController(),
-    mainViewModel: MainViewModel
+    navController: NavHostController = rememberNavController()
 ) {
+    val mainViewModel = hiltViewModel<MainViewModel>()
 
     fun navigateToReadFileScreen() {
         navController.navigate(Screens.ReadFileScreen.route)
