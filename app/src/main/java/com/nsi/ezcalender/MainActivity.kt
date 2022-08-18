@@ -27,7 +27,9 @@ import javax.inject.Inject
 var PERMISSIONS = arrayOf(
     Manifest.permission.MANAGE_EXTERNAL_STORAGE,
     Manifest.permission.READ_EXTERNAL_STORAGE,
-    Manifest.permission.WRITE_EXTERNAL_STORAGE
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    Manifest.permission.INTERNET
+
 )
 
 @AndroidEntryPoint

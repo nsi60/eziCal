@@ -5,27 +5,28 @@ package com.nsi.ezcalender.impl
 //import biweekly.component.VEvent
 import android.net.Uri
 import android.os.Environment
-import android.provider.ContactsContract.CommonDataKinds.Website.URL
 import com.nsi.ezcalender.model.Event
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.UnfoldingReader
 import net.fortuna.ical4j.model.Component.VEVENT
-import net.fortuna.ical4j.model.Property.URL
 import net.fortuna.ical4j.model.component.VEvent
-import java.io.*
+import java.io.File
+import java.io.FileReader
+import java.io.InputStream
 import java.net.URL
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
 
 //https://www.webdavsystem.com/server/creating_caldav_carddav/calendar_ics_file_structure/
 
-
-const val PICK_ICS_FILE = 2
-
 class ICSReader @Inject constructor() {
 
-    private val events = mutableListOf<Event>()
+    private lateinit var events: MutableList<Event>
     private val initialFileOpenUri =
         Uri.parse(Environment.getExternalStorageDirectory().absolutePath + "/Download/")
 
@@ -101,38 +102,51 @@ class ICSReader @Inject constructor() {
 
 
     fun getEvents(): MutableList<Event> {
-        println(events)
         return events
     }
 
-    fun readSelectedFile(inputStream: InputStream?,selectedFile: File? = null) {
-//        val fin = UnfoldingReader(
+    fun readSelectedFile(inputStream: InputStream?) {
+//        val fin = UnfoldingReader(  //TODO to open using file path
 //            FileReader(selectedFile),
 //            true
 //        )
 
-//        val inputStream = URL("http://airbnb.com/ical/").openStream() //TODO from URL
-//        try {
-//            val cal = CalendarBuilder().build(inputStream)
-//        } finally {
-//            inputStream.close()
-//        }
-
         val builder = CalendarBuilder()
-
+        val dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")
+        events = mutableListOf<Event>()
 
         val calendar = builder.build(inputStream)
         val events = calendar.components.getComponents(VEVENT)
         for (event in events) {
             val nE: VEvent = event as VEvent
 
-            val eventSummary = nE.summary.value
-            val eventLocation = nE.location.value
-            this.events.add(Event(summary = eventSummary, location = eventLocation))
+            val eDateStartString = nE.startDate.value
+            val localDateTimeDtStart = LocalDateTime.parse(eDateStartString, dateFormatter)
+
+            val eDateEndString = nE.endDate.value
+            val localDateTimeDtEnd = LocalDateTime.parse(eDateEndString, dateFormatter)
+
+            val event = Event(
+                uid = nE.uid,
+                summary = nE.summary.value,
+                dtStart = localDateTimeDtStart,
+                dtEnd = localDateTimeDtEnd,
+                location = nE.location.value,
+                geo = nE.geographicPos?.value,
+            )
+            this.events.add(event)
+
+
         }
     }
 
 
+    suspend fun openFromUrl2(inputUrl: String?) =
+        withContext(Dispatchers.IO) {
+            val url = URL(inputUrl)
+            val inputStream = url.openStream()
+            readSelectedFile(inputStream)
+        }
 }
 
 
