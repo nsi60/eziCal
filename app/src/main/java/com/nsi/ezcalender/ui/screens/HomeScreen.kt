@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -120,17 +123,17 @@ fun HomeScreenContent(
         }
 
         if (switchState) {
-            TextField(modifier = Modifier
+            OutlinedTextField(modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(12.dp)
                 .background(
                     color = Color.Unspecified,
                     shape = CircleShape,
-                ), value = "Open a file on device.", onValueChange = {},
+                ), value = "Open a file on the device.", onValueChange = {},
                 enabled = false,
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = Color.Transparent,
-                    disabledTextColor = Color.White,
+                    disabledTextColor = Color.Unspecified,
                     backgroundColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -146,7 +149,7 @@ fun HomeScreenContent(
             }
 
         } else {
-            TextField(
+            OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
@@ -160,10 +163,10 @@ fun HomeScreenContent(
                 },
                 label = { Text(text = "URL") },
                 placeholder = { Text(text = "https://") },
-                colors = TextFieldDefaults.textFieldColors(
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                ),
+//                colors = TextFieldDefaults.textFieldColors(
+//                    focusedIndicatorColor = Color.Transparent,
+//                    unfocusedIndicatorColor = Color.Transparent,
+//                ),
                 maxLines = 1
             )
 

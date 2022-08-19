@@ -13,7 +13,7 @@ import com.nsi.ezcalender.ui.screens.HomeScreen
 fun EzCalenderApp() {
     val navController = rememberNavController()
     Scaffold(
-        bottomBar = { BottomNavigationThing(navController = navController) }
+        bottomBar = { BottomNavigationThing(navController = navController) },
     ) {
 //        BottomNavigationThing(navController = navController)
         NavigationHost(navController)

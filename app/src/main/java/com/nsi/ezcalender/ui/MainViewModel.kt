@@ -21,6 +21,7 @@ import javax.inject.Inject
 data class State(
     val isLoading: Boolean = false,
     val eventsList: List<Event> = emptyList<Event>(),
+    var createdEventsList: MutableList<Event> = mutableListOf(),
     val selectedFileInputStream: InputStream? = null,
     val icsFileUrl: String? = "https://timetable.canterbury.ac.nz/even/rest/calendar/ical/24208ac0-d4dc-488d-8919-f000e870154d",
     val sortOptions: SortOptions = SortOptions.DATE_START
@@ -31,6 +32,7 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
 
     private val _state = mutableStateOf(State())
     val state: MutableState<State> get() = _state
+
 
 
     fun readSelectedFile() {
@@ -79,6 +81,12 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
             _state.value = state.value.copy(isLoading = false)
 
         }
+    }
+
+    fun saveCreatedEvent(event: Event) {
+        _state.value.createdEventsList.add(event)
+//        _state.value = state.value.copy(createdEventsList = events)
+
     }
 
 }

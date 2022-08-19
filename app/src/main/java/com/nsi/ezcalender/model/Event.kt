@@ -20,13 +20,15 @@ import java.time.LocalDateTime
  */
 
 data class Event(
-    var uid: Uid? = null,
-    var summary: String = "",
+    val uid: Uid? = null,
+    val summary: String = "",
 //    var dtStart: String = "",
-    var dtStart: LocalDateTime? = null,
-    var dtEnd: LocalDateTime? = null,
-    var location: String = "",
-    var geo: String? = null,
+    val dtStart: LocalDateTime? = null,
+    val dtEnd: LocalDateTime? = null,
+    val location: String = "",
+    val geo: String? = null,
+    val url: String? = null,
+
 
 
 //    var rRule: String = "RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=2;BYMONTHDAY=12",

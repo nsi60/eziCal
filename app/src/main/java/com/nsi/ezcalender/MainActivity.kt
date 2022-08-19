@@ -1,26 +1,21 @@
 package com.nsi.ezcalender
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.nsi.ezcalender.impl.ICSReader
 import com.nsi.ezcalender.ui.EzCalenderApp
-import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.theme.EzCalenderTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ActivityContext
+import java.io.File
 import javax.inject.Inject
 
 
@@ -73,7 +68,6 @@ class MainActivity : ComponentActivity() {
             requestPermissionLauncher.launch(PERMISSIONS)
         }
 
-
         setContent {
             EzCalenderTheme {
                 EzCalenderApp()
@@ -90,8 +84,6 @@ class MainActivity : ComponentActivity() {
         }
         return granted
     }
-
-
 
 
 }

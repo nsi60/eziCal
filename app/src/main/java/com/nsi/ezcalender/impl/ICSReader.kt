@@ -3,6 +3,7 @@ package com.nsi.ezcalender.impl
 //import biweekly.Biweekly
 //import biweekly.ICalendar
 //import biweekly.component.VEvent
+
 import android.net.Uri
 import android.os.Environment
 import com.nsi.ezcalender.model.Event
@@ -10,8 +11,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.UnfoldingReader
+import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component.VEVENT
 import net.fortuna.ical4j.model.component.VEvent
+import net.fortuna.ical4j.model.property.CalScale
+import net.fortuna.ical4j.model.property.ProdId
+import net.fortuna.ical4j.model.property.Version
 import java.io.File
 import java.io.FileReader
 import java.io.InputStream
@@ -147,6 +152,14 @@ class ICSReader @Inject constructor() {
             val inputStream = url.openStream()
             readSelectedFile(inputStream)
         }
+
+    fun createCalender() {
+        val calendar = Calendar()
+        calendar.properties.add(ProdId("-//Ben Fortuna//iCal4j 1.0//EN"))
+        calendar.properties.add(Version.VERSION_2_0)
+        calendar.properties.add(CalScale.GREGORIAN)
+    }
+
 }
 
 
