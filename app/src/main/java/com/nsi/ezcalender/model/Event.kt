@@ -24,7 +24,7 @@ data class Event(
 //    var dtStart: String = "",
     val dtStart: LocalDateTime? = null,
     val dtEnd: LocalDateTime? = null,
-    val location: String = "",
+    val location: String = "420 High Street",
     val geo: String? = "0,0",
     val url: String? = null,
 

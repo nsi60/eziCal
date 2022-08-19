@@ -2,6 +2,7 @@ package com.nsi.ezcalender.ui.common
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.net.Uri
 import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.compose.animation.animateContentSize
@@ -26,6 +27,8 @@ import androidx.compose.ui.window.DialogProperties
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.screens.CustomDisabledTextField
 import com.nsi.ezcalender.ui.screens.CustomTextField
+import com.nsi.ezcalender.ui.screens.startImplicitIntent
+import java.net.URLEncoder
 import java.time.LocalDateTime
 import java.util.*
 
@@ -65,7 +68,7 @@ fun CustomAlertDialog() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FullScreenAlertDialog(
+fun CreateEventDialog(
     openDialog: Boolean,
     closeDialog: () -> Unit,
     saveEvent: (Event, Boolean) -> Unit
@@ -211,6 +214,7 @@ fun FullScreenAlertDialog(
                                 )
                             }
                             Text(text = "title")
+
                         }
                         Divider()
                     }
@@ -236,7 +240,7 @@ fun FullScreenAlertDialog(
                             CustomDisabledTextField(
                                 modifier = Modifier.weight(3f),
                                 value = dateStartText,
-                                startDatePickerDialog = {
+                                onClick = {
                                     startDatePickerDialog.show()
                                 },
                                 label = "Start date",
@@ -252,7 +256,7 @@ fun FullScreenAlertDialog(
                             CustomDisabledTextField(
                                 modifier = Modifier.weight(2f),
                                 value = timeStartText,
-                                startDatePickerDialog = {
+                                onClick = {
                                     startTimePickerDialog.show()
                                 },
                                 label = "Start time",
@@ -276,7 +280,7 @@ fun FullScreenAlertDialog(
                             CustomDisabledTextField(
                                 modifier = Modifier.weight(3f),
                                 value = dateEndText,
-                                startDatePickerDialog = {
+                                onClick = {
 //                                endDatePickerDialog.show() //Todo have disabled it for now, handling same day events
                                 },
                                 label = "End date",
@@ -292,7 +296,7 @@ fun FullScreenAlertDialog(
                             CustomDisabledTextField(
                                 modifier = Modifier.weight(2f),
                                 value = timeEndText,
-                                startDatePickerDialog = {
+                                onClick = {
                                     endTimePickerDialog.show()
                                 },
                                 label = "End time",
@@ -317,7 +321,7 @@ fun FullScreenAlertDialog(
                         CustomTextField(
                             text = geoText,
                             updateText = { geoText = it },
-                            label = "Geo Tags",
+                            label = "Geo Tag",
                             placeHolder = "4,20"
                         )
 
@@ -390,6 +394,220 @@ fun FullScreenAlertDialog(
     }
 }
 
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ViewEventDialog(
+    event: Event?,
+    openDialog: Boolean,
+    closeDialog: () -> Unit,
+) {
+    val context = LocalContext.current
+
+    if (openDialog) {
+        Dialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            onDismissRequest = {}
+        ) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .animateContentSize()
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+
+
+                    Column {
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.Start,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(onClick = {
+                                closeDialog()
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Close,
+                                    contentDescription = "c-d"
+                                )
+                            }
+                            Text(text = "title")
+                        }
+                        Divider()
+                    }
+
+
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .weight(weight = 1f, fill = false)
+                    ) {
+                        CustomDisabledTextField(
+                            value = event?.summary.toString(),
+                            onClick = { },
+                            label = "Summary",
+                            placeHolder = "",
+                            trailingIcon = { }
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+
+                            CustomDisabledTextField(
+                                modifier = Modifier.weight(3f),
+                                value = "${event?.dtStart?.dayOfMonth}/${event?.dtStart?.monthValue}/${event?.dtStart?.year}",
+                                onClick = {
+                                    //Todo open calendar?
+                                },
+                                label = "Start date",
+                                placeHolder = "",
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.DateRange,
+                                        contentDescription = "c-d"
+                                    )
+                                }
+                            )
+
+                            CustomDisabledTextField(
+                                modifier = Modifier.weight(2f),
+                                value = "${event?.dtStart?.hour} : ${event?.dtStart?.minute}",
+                                onClick = {
+                                    //TODO open Alarm?
+                                },
+                                label = "Start time",
+                                placeHolder = "",
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = "c-d"
+                                    )
+                                }
+                            )
+                        }
+
+
+                        //TODO maybe keep end date same as start date now and only change time
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            CustomDisabledTextField(
+                                modifier = Modifier.weight(3f),
+                                value = "${event?.dtEnd?.dayOfMonth}/${event?.dtEnd?.monthValue}/${event?.dtEnd?.year}",
+                                onClick = {
+                                    //Todo open calendar?
+                                },
+                                label = "End date",
+                                placeHolder = "",
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.DateRange,
+                                        contentDescription = "c-d"
+                                    )
+                                }
+                            )
+
+                            CustomDisabledTextField(
+                                modifier = Modifier.weight(2f),
+                                value = "${event?.dtEnd?.hour} : ${event?.dtEnd?.minute}",
+                                onClick = {
+                                    //TODO open Alarm?
+                                },
+                                label = "End time",
+                                placeHolder = "23:59",
+                                trailingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Star,
+                                        contentDescription = "c-d"
+                                    )
+                                }
+                            )
+                        }
+
+
+                        CustomDisabledTextField(
+                            value = event?.location.toString(),
+                            onClick = {
+                                startImplicitIntent(
+                                    context, Uri.parse(
+                                        "geo:0,0?q=${
+                                            URLEncoder.encode(
+                                                event?.location ?: "420 High Street".ifEmpty {
+                                                    "420 High Street"
+                                                },
+                                                "UTF-8"
+                                            )
+                                        }"
+                                    )
+                                )
+                            },
+                            label = "Location",
+                            placeHolder = "",
+                            trailingIcon = { }
+                        )
+
+                        CustomDisabledTextField(
+                            value = event?.geo.toString(),
+                            onClick = {
+                                startImplicitIntent(
+                                    context,
+                                    Uri.parse(
+                                        "geo:${event?.geo}"
+                                    )
+                                )
+                            },
+                            label = "Geo Tag",
+                            placeHolder = "",
+                            trailingIcon = { }
+                        )
+
+                        CustomDisabledTextField(
+                            value = event?.url.toString(),
+                            onClick = {
+                                //TODO open browser
+                            },
+                            label = "URL",
+                            placeHolder = "",
+                            trailingIcon = { }
+                        )
+                    }
+
+                    Column {
+                        Divider()
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.End,
+                        ) {
+                            Button(
+                                modifier = Modifier
+                                    .padding(horizontal = 4.dp),
+                                onClick = {
+                                    closeDialog()
+                                }) {
+                                Text(text = "Close")
+                            }
+                            //                        }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 

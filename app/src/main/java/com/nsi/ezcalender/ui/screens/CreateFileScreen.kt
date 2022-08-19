@@ -24,7 +24,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.MainViewModel
-import com.nsi.ezcalender.ui.common.FullScreenAlertDialog
+import com.nsi.ezcalender.ui.common.CreateEventDialog
+import com.nsi.ezcalender.ui.common.ViewEventDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -41,6 +42,9 @@ fun CreateFileScreen(
         },
         deleteEvent = {
             mainViewModel.deleteEvent(it)
+        },
+        exportCalender = {
+            mainViewModel.exportCreatedEvents()
         }
     )
 
@@ -59,13 +63,17 @@ fun CreateFileScreen(
 fun CreateFileScreenContent(
     createdEvents: SnapshotStateList<Event>,
     saveEvent: (Event) -> Unit,
-    deleteEvent: (Event) -> Unit
+    deleteEvent: (Event) -> Unit,
+    exportCalender: () -> Unit
 
 ) {
 
     var openDialog by remember { mutableStateOf(false) }
+    var openViewEventDialog by remember { mutableStateOf(false) }
+
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    var selectedEvent: Event? by remember { mutableStateOf(null) }
 
 
     Scaffold(floatingActionButton = {
@@ -88,7 +96,7 @@ fun CreateFileScreenContent(
 
     ) {
 
-        FullScreenAlertDialog(
+        CreateEventDialog(
             openDialog,
             saveEvent = { event, creatAnotherEvent ->
                 saveEvent(event)
@@ -101,7 +109,7 @@ fun CreateFileScreenContent(
                 }
 
             },
-            closeDialog = { openDialog = false }
+            closeDialog = { openDialog = false },
         )
 
 
@@ -111,6 +119,41 @@ fun CreateFileScreenContent(
                 .fillMaxSize()
                 .padding(bottom = 60.dp)
         ) {
+
+            if (createdEvents.isNotEmpty()) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Button(onClick = {
+                        exportCalender()
+                    }) {
+                        Text("Export/Save")
+                    }
+                }
+                Divider()
+
+
+            } else {
+                Row(
+                    Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Nothing to show.")
+                }
+            }
+
+
+            ViewEventDialog(
+                event = selectedEvent,
+                openDialog = openViewEventDialog,
+                closeDialog = { openViewEventDialog = false }
+            )
+
             LazyColumn {
 
                 items(items = createdEvents, key = { it.uid!! }
@@ -148,7 +191,13 @@ fun CreateFileScreenContent(
                             }
                         },
                         dismissContent = {
-                            EventComposable(context = context, event = event)
+                            EventComposable(
+                                context = context,
+                                event = event,
+                                onClick = {
+                                    selectedEvent = it
+                                    openViewEventDialog = true
+                            })
                         },
 
                         )
@@ -194,9 +243,9 @@ fun CustomTextField(
 
 @Composable
 fun CustomDisabledTextField(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     value: String,
-    startDatePickerDialog: () -> Unit,
+    onClick: () -> Unit,
     label: String,
     placeHolder: String,
     trailingIcon: @Composable (() -> Unit)
@@ -210,7 +259,7 @@ fun CustomDisabledTextField(
                 shape = CircleShape,
             )
             .clickable {
-                startDatePickerDialog()
+                onClick()
             },
         value = value,
         onValueChange = {},

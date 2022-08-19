@@ -97,5 +97,9 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
         _state.value.createdEventsList.remove(event)
     }
 
+    fun exportCreatedEvents() {
+        println(state.value.createdEventsList)
+    }
+
 }
 

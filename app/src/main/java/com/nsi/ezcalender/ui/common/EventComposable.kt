@@ -18,7 +18,8 @@ import java.net.URLEncoder
 fun EventComposable(
     modifier: Modifier = Modifier,
     context: Context,
-    event: Event
+    event: Event,
+    onClick: (Event) -> Unit = {}
 ) {
 
     Card(
@@ -27,12 +28,7 @@ fun EventComposable(
             .padding(8.dp)
             .shadow(elevation = 2.dp)
             .clickable {
-                startImplicitIntent(
-                    context, Uri.parse(
-                        "geo:${event.geo}?q=${URLEncoder.encode(event.location, "UTF-8")}"
-                    )
-                )
-
+                onClick(event)
             }
     ) {
         Row(

@@ -16,7 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +26,7 @@ import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.model.SortOptions
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.CustomAlertDialog
+import com.nsi.ezcalender.ui.common.ViewEventDialog
 
 @Composable
 fun ReadFileScreen(
@@ -68,6 +69,8 @@ fun ReadFileScreenContent(
 
 ) {
     val context = LocalContext.current
+    var openDialog by remember { mutableStateOf(false) }
+    var selectedEvent: Event? by remember { mutableStateOf(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -87,9 +90,23 @@ fun ReadFileScreenContent(
             }
         }
 
+        ViewEventDialog(
+            event = selectedEvent,
+            openDialog = openDialog,
+            closeDialog = { openDialog = false }
+        )
+
         LazyColumn {
             items(events, key = { it.uid!! }) { event ->
-                EventComposable(modifier = Modifier.animateItemPlacement(), context, event)
+                EventComposable(
+                    modifier = Modifier.animateItemPlacement(),
+                    context,
+                    event,
+                    onClick = {
+                        selectedEvent = it
+                        openDialog = true
+                    }
+                )
             }
         }
     }
@@ -142,3 +159,4 @@ fun startImplicitIntent(context: Context, uri: Uri) {
     )
     startActivity(context, intent, null)
 }
+
