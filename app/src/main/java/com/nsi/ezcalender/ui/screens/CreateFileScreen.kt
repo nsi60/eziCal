@@ -1,6 +1,6 @@
 package com.nsi.ezcalender.ui.screens
 
-import android.net.Uri
+import EventComposable
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -12,11 +12,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
@@ -26,7 +27,6 @@ import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.FullScreenAlertDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.net.URLEncoder
 
 @Composable
 fun CreateFileScreen(
@@ -38,6 +38,9 @@ fun CreateFileScreen(
         createdEvents = state.createdEventsList,
         saveEvent = {
             mainViewModel.saveCreatedEvent(it)
+        },
+        deleteEvent = {
+            mainViewModel.deleteEvent(it)
         }
     )
 
@@ -48,11 +51,16 @@ fun CreateFileScreen(
 }
 
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
+@OptIn(
+    ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterialApi::class
+)
 @Composable
 fun CreateFileScreenContent(
-    createdEvents: MutableList<Event>,
-    saveEvent: (Event) -> Unit
+    createdEvents: SnapshotStateList<Event>,
+    saveEvent: (Event) -> Unit,
+    deleteEvent: (Event) -> Unit
+
 ) {
 
     var openDialog by remember { mutableStateOf(false) }
@@ -80,62 +88,70 @@ fun CreateFileScreenContent(
 
     ) {
 
+        FullScreenAlertDialog(
+            openDialog,
+            saveEvent = { event, creatAnotherEvent ->
+                saveEvent(event)
+                scope.launch {
+                    openDialog = false  //TODO add a checkbox for creating new event
+                    if (creatAnotherEvent) {
+                        delay(500)
+                        openDialog = true
+                    }
+                }
+
+            },
+            closeDialog = { openDialog = false }
+        )
+
+
+
         Column(
             Modifier
                 .fillMaxSize()
                 .padding(bottom = 60.dp)
         ) {
             LazyColumn {
-                items(createdEvents) {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .shadow(elevation = 2.dp)
-//                        .animateItemPlacement()   //TODO not the best looking
-                            .clickable {
-                                startImplicitIntent(
-                                    context, Uri.parse(
-                                        "geo:${it.geo}?q=${
-                                            URLEncoder.encode(
-                                                it.location.ifEmpty { "hell" },
-                                                "UTF-8"
-                                            )
-                                        }"
-                                    )
-                                )
-
+                items(items = createdEvents, key = { it.uid!! }
+                ) { event ->
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = {
+                            if (it == DismissValue.DismissedToStart) {
+                                deleteEvent(event)
                             }
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 12.dp),
-                        ) {
-                            Column(
-                                Modifier.weight(1f),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Text(it.dtStart?.dayOfMonth.toString())
-                                Text(it.dtStart?.month.toString())
-//                            Text(it.dtStart?.year.toString())
-
-                            }
-                            Column(Modifier.weight(2f)) {
-                                Text(text = it.summary.toString())
-                                Text(
-                                    text = "${it.dtStart?.hour.toString()}:${it.dtStart?.minute.toString()} " +
-                                            "- ${it.dtEnd?.hour.toString()}:${it.dtEnd?.minute.toString()}"
-                                )
-                                Text(text = it.location)
-                            }
-
+                            true
                         }
-                    }
+                    )
 
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
 
+                            val color = when (dismissState.dismissDirection) {
+                                DismissDirection.EndToStart -> Color.Black
+                                DismissDirection.StartToEnd -> Color.Gray
+                                null -> Color.Transparent
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(color = color)
+                                    .padding(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete, contentDescription = "c-d",
+                                    tint = Color.Gray,
+                                    modifier = Modifier.align(Alignment.CenterEnd)
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            EventComposable(context = context, event = event)
+                        },
+
+                        )
                 }
             }
 
@@ -144,22 +160,6 @@ fun CreateFileScreenContent(
 //        enter = slideInVertically(),
 //        exit = slideOutVertically())
 
-
-            FullScreenAlertDialog(
-                openDialog,
-                saveEvent = { event, creatAnotherEvent ->
-                    saveEvent(event)
-                    scope.launch {
-                        openDialog = false  //TODO add a checkbox for creating new event
-                        if (creatAnotherEvent) {
-                            delay(500)
-                            openDialog = true
-                        }
-                    }
-
-                },
-                closeDialog = { openDialog = false }
-            )
 
         }
     }

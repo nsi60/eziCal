@@ -1,11 +1,11 @@
 package com.nsi.ezcalender.ui.screens
 
+import EventComposable
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
@@ -27,7 +26,6 @@ import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.model.SortOptions
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.CustomAlertDialog
-import java.net.URLEncoder
 
 @Composable
 fun ReadFileScreen(
@@ -90,52 +88,8 @@ fun ReadFileScreenContent(
         }
 
         LazyColumn {
-            items(events, key = { it.uid!! }) {
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .shadow(elevation = 2.dp)
-                        .animateItemPlacement()   //TODO not the best looking
-                        .clickable {
-                            startImplicitIntent(
-                                context, Uri.parse(
-                                    "geo:${it.geo}?q=${URLEncoder.encode(it.location, "UTF-8")}"
-                                )
-                            )
-
-                        }
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 12.dp),
-//                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column(
-                            Modifier.weight(1f),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Text(it.dtStart?.dayOfMonth.toString())
-                            Text(it.dtStart?.month.toString())
-//                            Text(it.dtStart?.year.toString())
-
-                        }
-                        Column(Modifier.weight(2f)) {
-                            Text(text = it.summary.toString())
-                            Text(
-                                text = "${it.dtStart?.hour.toString()}:${it.dtStart?.minute.toString()} " +
-                                        "- ${it.dtEnd?.hour.toString()}:${it.dtEnd?.minute.toString()}"
-                            )
-                            Text(text = it.location)
-                        }
-
-                    }
-                }
-
-
+            items(events, key = { it.uid!! }) { event ->
+                EventComposable(modifier = Modifier.animateItemPlacement(), context, event)
             }
         }
     }

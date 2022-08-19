@@ -16,7 +16,9 @@ import net.fortuna.ical4j.model.Component.VEVENT
 import net.fortuna.ical4j.model.component.VEvent
 import net.fortuna.ical4j.model.property.CalScale
 import net.fortuna.ical4j.model.property.ProdId
+import net.fortuna.ical4j.model.property.Uid
 import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.util.UidGenerator
 import java.io.File
 import java.io.FileReader
 import java.io.InputStream
@@ -141,7 +143,6 @@ class ICSReader @Inject constructor() {
             )
             this.events.add(event)
 
-
         }
     }
 
@@ -159,6 +160,14 @@ class ICSReader @Inject constructor() {
         calendar.properties.add(Version.VERSION_2_0)
         calendar.properties.add(CalScale.GREGORIAN)
     }
+
+    suspend fun generateUid(): Uid? =
+
+        withContext(Dispatchers.Default) {
+            val uidGenerator = UidGenerator("1")
+            uidGenerator.generateUid()
+        }
+
 
 }
 

@@ -1,7 +1,9 @@
 package com.nsi.ezcalender.ui
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nsi.ezcalender.impl.ICSReader
@@ -17,7 +19,7 @@ import javax.inject.Inject
 data class State(
     val isLoading: Boolean = false,
     val eventsList: List<Event> = emptyList<Event>(),
-    var createdEventsList: MutableList<Event> = mutableListOf(),
+    var createdEventsList: SnapshotStateList<Event> = mutableStateListOf(),
     val selectedFileInputStream: InputStream? = null,
     val icsFileUrl: String? = "https://timetable.canterbury.ac.nz/even/rest/calendar/ical/24208ac0-d4dc-488d-8919-f000e870154d",
     val sortOptions: SortOptions = SortOptions.DATE_START
@@ -78,13 +80,21 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
     }
 
     fun saveCreatedEvent(event: Event) {
-        _state.value.createdEventsList.add(event)
-//        _state.value = state.value.copy(createdEventsList = events)
-
+        viewModelScope.launch {
+            val uid = icsReader.generateUid()
+            event.uid = uid
+            val events = _state.value.createdEventsList
+            events.add(event)
+            _state.value = state.value.copy(createdEventsList = events)
+        }
     }
 
     suspend fun fetchSomeData() {
         delay(3000L)
+    }
+
+    fun deleteEvent(event: Event) {
+        _state.value.createdEventsList.remove(event)
     }
 
 }

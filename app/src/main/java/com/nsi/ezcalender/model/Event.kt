@@ -19,7 +19,7 @@ import java.time.LocalDateTime
  */
 
 data class Event(
-    val uid: Uid? = null,
+    var uid: Uid? = null,
     val summary: String? = null,
 //    var dtStart: String = "",
     val dtStart: LocalDateTime? = null,
