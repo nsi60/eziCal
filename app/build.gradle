@@ -79,5 +79,10 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "org.jetbrains.kotlin:kotlin-script-runtime:1.6.21"
 
+    //coil for gif
+    implementation "io.coil-kt:coil-compose:2.1.0"
+    implementation "io.coil-kt:coil-gif:2.1.0"
+
+
 
 }

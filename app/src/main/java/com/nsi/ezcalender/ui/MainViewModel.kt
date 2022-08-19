@@ -1,6 +1,5 @@
 package com.nsi.ezcalender.ui
 
-import android.net.Uri
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,9 +10,6 @@ import com.nsi.ezcalender.model.SortOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.fortuna.ical4j.model.ComponentList
-import java.io.File
-import java.io.FileInputStream
 import java.io.InputStream
 import javax.inject.Inject
 
@@ -32,7 +28,6 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
 
     private val _state = mutableStateOf(State())
     val state: MutableState<State> get() = _state
-
 
     fun readSelectedFile() {
         icsReader.readSelectedFile(state.value.selectedFileInputStream)
@@ -86,6 +81,10 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
         _state.value.createdEventsList.add(event)
 //        _state.value = state.value.copy(createdEventsList = events)
 
+    }
+
+    suspend fun fetchSomeData() {
+        delay(3000L)
     }
 
 }

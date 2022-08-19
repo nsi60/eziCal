@@ -1,6 +1,5 @@
 package com.nsi.ezcalender.model
 
-import net.fortuna.ical4j.model.property.DtStart
 import net.fortuna.ical4j.model.property.Uid
 import java.time.LocalDateTime
 

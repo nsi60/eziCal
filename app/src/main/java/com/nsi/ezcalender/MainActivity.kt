@@ -3,7 +3,6 @@ package com.nsi.ezcalender
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
@@ -15,7 +14,6 @@ import com.nsi.ezcalender.impl.ICSReader
 import com.nsi.ezcalender.ui.EzCalenderApp
 import com.nsi.ezcalender.ui.theme.EzCalenderTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.File
 import javax.inject.Inject
 
 

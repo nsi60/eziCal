@@ -1,17 +1,11 @@
 package com.nsi.ezcalender.ui.navigation
 
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.nsi.ezcalender.R
 import com.nsi.ezcalender.ui.screens.Screens
 
 @Composable
@@ -54,7 +48,6 @@ fun BottomNavigationThing(
         }
 
     }
-
 }
 
 

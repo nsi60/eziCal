@@ -5,18 +5,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.nsi.ezcalender.ui.MainViewModel
-import com.nsi.ezcalender.ui.screens.CreateFileScreen
-import com.nsi.ezcalender.ui.screens.Screens
-import com.nsi.ezcalender.ui.screens.HomeScreen
-import com.nsi.ezcalender.ui.screens.ReadFileScreen
+import com.nsi.ezcalender.ui.screens.*
 
 @Composable
 fun NavigationHost(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController
 ) {
     val mainViewModel = hiltViewModel<MainViewModel>()
+
+
+    fun navigateToHomeScreen() {
+        navController.navigate(Screens.HomeScreen.route)
+    }
+
 
     fun navigateToReadFileScreen() {
         navController.navigate(Screens.ReadFileScreen.route)
@@ -32,8 +34,20 @@ fun NavigationHost(
 
     NavHost(
         navController = navController,
-        startDestination = Screens.HomeScreen.route
+        startDestination = Screens.SplashScreen.route
     ) {
+
+        composable(Screens.SplashScreen.route) {
+            SplashScreen(
+                mainVewModel = mainViewModel,
+                navigateToHomeScreen = {
+                    navController.popBackStack()
+                    navigateToHomeScreen()
+                }
+            )
+        }
+
+
         composable(Screens.HomeScreen.route) {
             HomeScreen(
                 mainVewModel = mainViewModel,
