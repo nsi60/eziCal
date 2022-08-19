@@ -123,13 +123,15 @@ fun HomeScreenContent(
         }
 
         if (switchState) {
-            OutlinedTextField(modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-                .background(
-                    color = Color.Unspecified,
-                    shape = CircleShape,
-                ), value = "Open a file on the device.", onValueChange = {},
+            OutlinedTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
+                    .background(
+                        color = Color.Unspecified,
+                        shape = CircleShape,
+                    ),
+                value = "Open a file on the device.", onValueChange = {},
                 enabled = false,
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = Color.Transparent,

@@ -21,14 +21,13 @@ import java.time.LocalDateTime
 
 data class Event(
     val uid: Uid? = null,
-    val summary: String = "",
+    val summary: String? = null,
 //    var dtStart: String = "",
     val dtStart: LocalDateTime? = null,
     val dtEnd: LocalDateTime? = null,
     val location: String = "",
-    val geo: String? = null,
+    val geo: String? = "0,0",
     val url: String? = null,
-
 
 
 //    var rRule: String = "RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=2;BYMONTHDAY=12",

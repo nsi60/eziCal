@@ -34,7 +34,6 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
     val state: MutableState<State> get() = _state
 
 
-
     fun readSelectedFile() {
         icsReader.readSelectedFile(state.value.selectedFileInputStream)
         val events = icsReader.getEvents()

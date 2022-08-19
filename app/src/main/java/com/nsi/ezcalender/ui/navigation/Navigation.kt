@@ -36,22 +36,22 @@ fun NavigationHost(
     ) {
         composable(Screens.HomeScreen.route) {
             HomeScreen(
-                mainVewModel =  mainViewModel,
+                mainVewModel = mainViewModel,
                 navigateToReadFileScreen = { navigateToReadFileScreen() },
-                navigateToCreateFileScreen = { navigateToCreateFileScreen()  }
+                navigateToCreateFileScreen = { navigateToCreateFileScreen() }
             )
         }
 
         composable(Screens.ReadFileScreen.route) {
             ReadFileScreen(
-                mainViewModel =  mainViewModel,
+                mainViewModel = mainViewModel,
                 navigateUp = { navigationPopUp() },
             )
         }
 
         composable(Screens.CreateFileScreen.route) {
             CreateFileScreen(
-                mainViewModel =  mainViewModel,
+                mainViewModel = mainViewModel,
                 navigateUp = { navigationPopUp() },
             )
         }

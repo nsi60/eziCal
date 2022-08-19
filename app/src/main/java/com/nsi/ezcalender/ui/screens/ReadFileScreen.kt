@@ -108,7 +108,7 @@ fun ReadFileScreenContent(
                         .clickable {
                             startImplicitIntent(
                                 context, Uri.parse(
-                                    it.geo ?: "geo:0,0?q=${URLEncoder.encode(it.location, "UTF-8")}"
+                                    "geo:${it.geo}?q=${URLEncoder.encode(it.location, "UTF-8")}"
                                 )
                             )
 
@@ -131,7 +131,7 @@ fun ReadFileScreenContent(
 
                         }
                         Column(Modifier.weight(2f)) {
-                            Text(text = it.summary)
+                            Text(text = it.summary.toString())
                             Text(
                                 text = "${it.dtStart?.hour.toString()}:${it.dtStart?.minute.toString()} " +
                                         "- ${it.dtEnd?.hour.toString()}:${it.dtEnd?.minute.toString()}"
