@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.nsi.ezcalender.R
+import com.nsi.ezcalender.model.DateTimePickerType
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.screens.CustomDisabledTextField
 import com.nsi.ezcalender.ui.screens.CustomTextField
@@ -35,7 +37,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 @Composable
-fun CustomAlertDialog() {
+fun LoadingAlertDialog() {
     AlertDialog(
         onDismissRequest = {
 //            openDialog.value = false
@@ -59,7 +61,7 @@ fun CustomAlertDialog() {
 //                        openDialog.value = false
                     }
                 ) {
-                    Text( stringResource(id = R.string.loadingTitle))
+                    Text(stringResource(id = R.string.loadingTitle))
                 }
             }
         }
@@ -77,19 +79,20 @@ fun CreateEventDialog(
 
 ) {
     val context = LocalContext.current
-    var createAnotherEventCheck by remember { mutableStateOf(true) }
+    var createAnotherEventCheck by rememberSaveable { mutableStateOf(true) }
+
+
+    var dateTimePickerType by rememberSaveable { mutableStateOf(DateTimePickerType.None) }
 
 
     var summaryText by remember { mutableStateOf(TextFieldValue("")) }
 
-    var dateStartObject by remember { mutableStateOf(LocalDateTime.now()) }
-    var dateEndObject by remember { mutableStateOf(dateStartObject.plusHours(1)) }
+    var dateStartObject by rememberSaveable { mutableStateOf(LocalDateTime.now()) }
+    var dateEndObject by rememberSaveable { mutableStateOf(dateStartObject.plusHours(1)) }
 
     var locationText by remember { mutableStateOf(TextFieldValue("")) }
     var geoText by remember { mutableStateOf(TextFieldValue("")) }
     var urlText by remember { mutableStateOf(TextFieldValue("")) }
-
-    val calendar by remember { mutableStateOf(Calendar.getInstance()) }
 
 
     var timeStartText by remember { mutableStateOf("${dateStartObject.hour} : ${dateStartObject.minute}") }
@@ -99,46 +102,53 @@ fun CreateEventDialog(
 //    var dateEndText by remember { mutableStateOf("") }
     var dateEndText by remember { mutableStateOf(dateStartText) }  //as long as end date is disabled
 
-    val startTimePickerDialog = remember {
-        TimePickerDialog(
-            context,
-            { _: TimePicker, hour: Int, minute: Int ->
-                timeStartText = "$hour : $minute"
+    val startTimePickerDialog =
+        remember {
+            TimePickerDialog(
+                context,
+                { _: TimePicker, hour: Int, minute: Int ->
+                    timeStartText = "$hour : $minute"
 //                dateStartText = "$dateStartText $timeStartText"
-                dateStartObject = LocalDateTime.of(
-                    dateStartObject.year,
-                    dateStartObject.month,
-                    dateStartObject.dayOfMonth,
-                    hour,
-                    minute
-                )
+                    dateStartObject = LocalDateTime.of(
+                        dateStartObject.year,
+                        dateStartObject.month,
+                        dateStartObject.dayOfMonth,
+                        hour,
+                        minute
+                    )
+//                showStartTimePickerDialog = false
+                    dateTimePickerType = DateTimePickerType.None
 
-            },
-            calendar.get(Calendar.HOUR),
-            calendar.get(Calendar.MINUTE),
-            false
-        )
-    }
+                },
+                dateStartObject.hour,
+                dateStartObject.minute,
+                false
+            )
+        }
 
-    val endTimePickerDialog = remember {
-        TimePickerDialog(
-            context,
-            { _: TimePicker, hour: Int, minute: Int ->
-                timeEndText = "$hour : $minute"
+
+    val endTimePickerDialog =
+        remember {
+            TimePickerDialog(
+                context,
+                { _: TimePicker, hour: Int, minute: Int ->
+                    timeEndText = "$hour : $minute"
 //                dateEndText = "$dateEndText $timeEndText"
-                dateEndObject = LocalDateTime.of(
-                    dateEndObject.year,
-                    dateEndObject.month,
-                    dateEndObject.dayOfMonth,
-                    hour,
-                    minute
-                )
-            },
-            calendar.get(Calendar.HOUR),
-            calendar.get(Calendar.MINUTE),
-            false
-        )
-    }
+                    dateEndObject = LocalDateTime.of(
+                        dateEndObject.year,
+                        dateEndObject.month,
+                        dateEndObject.dayOfMonth,
+                        hour,
+                        minute
+                    )
+//                showEndTimePickerDialog = false
+                    dateTimePickerType = DateTimePickerType.None
+                },
+                dateEndObject.hour,
+                dateEndObject.minute,
+                false
+            )
+        }
 
 
     val startDatePickerDialog = remember {
@@ -156,30 +166,54 @@ fun CreateEventDialog(
                     dateStartObject.minute
                 )
                 dateEndObject = dateStartObject  //as long as end date is disabled
-
+//                showStartDatePickerDialog = false
+                dateTimePickerType = DateTimePickerType.None
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH),
+            dateStartObject.year,
+            dateStartObject.monthValue,
+            dateStartObject.dayOfMonth,
         )
     }
 
 
-    val endDatePickerDialog = remember {
-        DatePickerDialog(
-            context,
-            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
-                dateEndText = "$dayOfMonth/${month + 1}/$year"
-//                endTimePickerDialog.show()
-                dateEndObject = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0)
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
+//    val endDatePickerDialog by remember {
+//        DatePickerDialog(
+//            context,
+//            { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
+//                dateEndText = "$dayOfMonth/${month + 1}/$year"
+////                endTimePickerDialog.show()
+//                dateEndObject = LocalDateTime.of(year, month + 1, dayOfMonth, 0, 0)
+////                showEndDatePickerDialog = false
+////                dateTimePickerType = DateTimePickerType.None
+//            },
+//            dateEndObject.year,
+//            dateEndObject.monthValue,
+//            dateEndObject.dayOfMonth,
+//        )
+//    }
+
+    startTimePickerDialog.setOnCancelListener {
+        dateTimePickerType = DateTimePickerType.None
     }
 
+    endTimePickerDialog.setOnCancelListener {
+        dateTimePickerType = DateTimePickerType.None
+    }
+    startDatePickerDialog.setOnCancelListener {
+        dateTimePickerType = DateTimePickerType.None
+    }
+//    endDatePickerDialog.setOnCancelListener {
+//        dateTimePickerType = DateTimePickerType.None
+//    }
 
+    LaunchedEffect(dateTimePickerType) {
+        when (dateTimePickerType) {
+            DateTimePickerType.START_DATE -> startDatePickerDialog.show()
+//                DateTimePickerType.END_DATE ->
+            DateTimePickerType.START_TIME -> startTimePickerDialog.show()
+            DateTimePickerType.END_TIME -> endTimePickerDialog.show()
+        }
+    }
 
 
     if (openDialog) {
@@ -215,7 +249,7 @@ fun CreateEventDialog(
                                     contentDescription = "c-d"
                                 )
                             }
-                            Text(text =  stringResource(id = R.string.createdEventTitle))
+                            Text(text = stringResource(id = R.string.createdEventTitle))
 
                         }
                         Divider()
@@ -230,7 +264,7 @@ fun CreateEventDialog(
                         CustomTextField(
                             text = summaryText,
                             updateText = { summaryText = it },
-                            label =   stringResource(id = R.string.eventSummaryLabel),
+                            label = stringResource(id = R.string.eventSummaryLabel),
                             placeHolder = stringResource(id = R.string.eventSummaryPlaceholder)
                         )
 
@@ -243,7 +277,7 @@ fun CreateEventDialog(
                                 modifier = Modifier.weight(3f),
                                 value = dateStartText,
                                 onClick = {
-                                    startDatePickerDialog.show()
+                                    dateTimePickerType = DateTimePickerType.START_DATE
                                 },
                                 label = stringResource(id = R.string.eventStartDateLabel),
                                 placeHolder = stringResource(id = R.string.eventDatePlaceholder),
@@ -259,7 +293,7 @@ fun CreateEventDialog(
                                 modifier = Modifier.weight(2f),
                                 value = timeStartText,
                                 onClick = {
-                                    startTimePickerDialog.show()
+                                    dateTimePickerType = DateTimePickerType.START_TIME
                                 },
                                 label = stringResource(id = R.string.eventStartTimeLabel),
                                 placeHolder = stringResource(id = R.string.eventTimePlaceholder),
@@ -283,7 +317,7 @@ fun CreateEventDialog(
                                 modifier = Modifier.weight(3f),
                                 value = dateEndText,
                                 onClick = {
-//                                endDatePickerDialog.show() //Todo have disabled it for now, handling same day events
+//                                    dateTimePickerType = DateTimePickerType.END_DATE //Todo have disabled it for now, handling same day events
                                 },
                                 label = stringResource(id = R.string.eventEndDateLabel),
                                 placeHolder = stringResource(id = R.string.eventDatePlaceholder),
@@ -299,7 +333,7 @@ fun CreateEventDialog(
                                 modifier = Modifier.weight(2f),
                                 value = timeEndText,
                                 onClick = {
-                                    endTimePickerDialog.show()
+                                    dateTimePickerType = DateTimePickerType.END_TIME
                                 },
                                 label = stringResource(id = R.string.eventEndTimeLabel),
                                 placeHolder = stringResource(id = R.string.eventTimePlaceholder),
@@ -454,7 +488,7 @@ fun ViewEventDialog(
                         CustomDisabledTextField(
                             value = event?.summary.toString(),
                             onClick = { },
-                            label =   stringResource(id = R.string.eventSummaryLabel),
+                            label = stringResource(id = R.string.eventSummaryLabel),
                             trailingIcon = { }
                         )
 

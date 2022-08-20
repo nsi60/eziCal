@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -91,18 +92,17 @@ fun HomeScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        var switchState by remember {
+        var switchState by rememberSaveable {
             mutableStateOf(true)
         }
 
-        var text by remember { mutableStateOf(TextFieldValue(state.value.icsFileUrl ?: "")) }
-        var animateLogo by remember { mutableStateOf(true) }
-        val context = LocalContext.current
+        var text by rememberSaveable { mutableStateOf(state.value.icsFileUrl ?: "") }
+        var animateLogo by rememberSaveable { mutableStateOf(true) }
         val interactionSource = remember { MutableInteractionSource() }
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(8.dp)
                 .weight(1f)
                 .clickable(
@@ -134,9 +134,9 @@ fun HomeScreenContent(
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(8.dp)
-                .weight(1f),
+                .weight(2f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -180,8 +180,7 @@ fun HomeScreenContent(
                     value = stringResource(id = R.string.openFileDescription), onValueChange = {},
                     enabled = false,
                     colors = TextFieldDefaults.textFieldColors(
-                        textColor = Color.Transparent,
-                        disabledTextColor = Color.Unspecified,
+                        disabledTextColor = Color.Gray,
                         backgroundColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
@@ -219,7 +218,7 @@ fun HomeScreenContent(
                 )
 
                 Button(onClick = {
-                    openFromUrlCLicked(text.text)
+                    openFromUrlCLicked(text)
                 }) {
                     Text(text = stringResource(id = R.string.openUrlButtonText))
                 }

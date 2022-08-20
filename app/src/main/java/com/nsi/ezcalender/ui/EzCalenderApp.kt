@@ -1,10 +1,13 @@
 package com.nsi.ezcalender.ui
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nsi.ezcalender.ui.navigation.BottomNavigationThing
@@ -31,8 +34,10 @@ fun EzCalenderApp() {
             }
 
         },
-    ) {
-//        BottomNavigationThing(navController = navController)
-        NavigationHost(navController)
+    ) { innerPadding ->
+        // Apply the padding globally to the whole BottomNavScreensController
+        Box(modifier = Modifier.padding(innerPadding)) {
+            NavigationHost(navController)
+        }
     }
 }

@@ -9,12 +9,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -74,19 +76,20 @@ fun CreateFileScreenContent(
 
 ) {
 
-    var openDialog by remember { mutableStateOf(false) }
-    var openViewEventDialog by remember { mutableStateOf(false) }
+    var openDialog by rememberSaveable { mutableStateOf(false) }
+    var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var selectedEvent: Event? by remember { mutableStateOf(null) }
+//    var selectedEvent: Event? by rememberSaveable { mutableStateOf(createdEvents.ifEmpty { null }?.get(0)) } //TODO crashes  on rotate
+    var selectedEvent: Int? by rememberSaveable { mutableStateOf(if (createdEvents.isEmpty()) null else 0 ) }
 
 
     Scaffold(floatingActionButton = {
         Row(
             Modifier
-                .fillMaxSize()
-                .padding(bottom = 60.dp),
+                .fillMaxSize(),
+//                .padding(bottom = 60.dp),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.Bottom
         ) {
@@ -147,9 +150,14 @@ fun CreateFileScreenContent(
                     verticalArrangement = Arrangement.Center
                 ) {
 
-                    EzIcalLogoGif(Modifier.scale(0.5f))
+                    EzIcalLogoGif(
+                        Modifier
+                            .scale(0.5f)
+                            .weight(1f)
+                    )
                     Text(
-                        stringResource(id = R.string.createEventNoContentDescription),
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(id = R.string.createEventNoContentDescription),
                         textAlign = TextAlign.Center
                     )
 
@@ -157,16 +165,18 @@ fun CreateFileScreenContent(
 
             }
 
-            ViewEventDialog(
-                event = selectedEvent,
-                openDialog = openViewEventDialog,
-                closeDialog = { openViewEventDialog = false }
-            )
+            if (openViewEventDialog) {
+                ViewEventDialog(
+                    event = createdEvents[selectedEvent!!],
+                    openDialog = openViewEventDialog,
+                    closeDialog = { openViewEventDialog = false }
+                )
+            }
 
             LazyColumn {
 
-                items(items = createdEvents, key = { it.uid!! }
-                ) { event ->
+                itemsIndexed(items = createdEvents, key = {_, event -> event.uid!! }
+                ) { index, event ->
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
                             if (it == DismissValue.DismissedToStart) {
@@ -205,7 +215,7 @@ fun CreateFileScreenContent(
                                 context = context,
                                 event = event,
                                 onClick = {
-                                    selectedEvent = it
+                                    selectedEvent = index //it
                                     openViewEventDialog = true
                                 })
                         },
