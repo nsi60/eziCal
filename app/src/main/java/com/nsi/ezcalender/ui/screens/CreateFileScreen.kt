@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.CreateEventDialog
@@ -102,11 +104,11 @@ fun CreateFileScreenContent(
 
         CreateEventDialog(
             openDialog,
-            saveEvent = { event, creatAnotherEvent ->
+            saveEvent = { event, createAnotherEvent ->
                 saveEvent(event)
                 scope.launch {
                     openDialog = false  //TODO add a checkbox for creating new event
-                    if (creatAnotherEvent) {
+                    if (createAnotherEvent) {
                         delay(500)
                         openDialog = true
                     }
@@ -134,7 +136,7 @@ fun CreateFileScreenContent(
                     Button(onClick = {
                         exportCalender()
                     }) {
-                        Text("Export/Save")
+                        Text(stringResource(id = R.string.exportOrSaveText))
                     }
                 }
                 Divider()
@@ -147,7 +149,7 @@ fun CreateFileScreenContent(
 
                     EzIcalLogoGif(Modifier.scale(0.5f))
                     Text(
-                        text = "Nothing to show \n Please create an iCalender.",
+                        stringResource(id = R.string.createEventNoContentDescription),
                         textAlign = TextAlign.Center
                     )
 
@@ -255,7 +257,7 @@ fun CustomDisabledTextField(
     value: String,
     onClick: () -> Unit,
     label: String,
-    placeHolder: String,
+    placeHolder: String = "",
     trailingIcon: @Composable (() -> Unit)
 ) {
     OutlinedTextField(

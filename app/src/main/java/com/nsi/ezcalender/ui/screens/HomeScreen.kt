@@ -18,10 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nsi.ezcalender.R
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.State
 
@@ -146,7 +148,7 @@ fun HomeScreenContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Open URL", color = if (switchState) {
+                    stringResource(id = R.string.openUrlText), color = if (switchState) {
                         Color.Gray
                     } else {
                         Color.Unspecified
@@ -158,7 +160,7 @@ fun HomeScreenContent(
                     colors = SwitchDefaults.colors(uncheckedTrackColor = MaterialTheme.colors.secondaryVariant)
                 )
                 Text(
-                    "Open file", color = if (!switchState) {
+                    stringResource(id = R.string.openFileText), color = if (!switchState) {
                         Color.Gray
                     } else {
                         Color.Unspecified
@@ -175,7 +177,7 @@ fun HomeScreenContent(
                             color = Color.Unspecified,
                             shape = CircleShape,
                         ),
-                    value = "Open a file on the device.", onValueChange = {},
+                    value = stringResource(id = R.string.openFileDescription), onValueChange = {},
                     enabled = false,
                     colors = TextFieldDefaults.textFieldColors(
                         textColor = Color.Transparent,
@@ -191,7 +193,7 @@ fun HomeScreenContent(
                 Button(onClick = {
                     openFileClicked()
                 }) {
-                    Text(text = "Open existing file")
+                    Text(text = stringResource(id = R.string.openFileButtonText))
                 }
 
             } else {
@@ -207,8 +209,8 @@ fun HomeScreenContent(
                     onValueChange = { newText ->
                         text = newText
                     },
-                    label = { Text(text = "URL") },
-                    placeholder = { Text(text = "https://") },
+                    label = { Text(text = stringResource(id = R.string.eventUrlLabel)) },
+                    placeholder = { Text(text = stringResource(id = R.string.eventUrlPlaceholder)) },
 //                colors = TextFieldDefaults.textFieldColors(
 //                    focusedIndicatorColor = Color.Transparent,
 //                    unfocusedIndicatorColor = Color.Transparent,
@@ -219,7 +221,7 @@ fun HomeScreenContent(
                 Button(onClick = {
                     openFromUrlCLicked(text.text)
                 }) {
-                    Text(text = "Open from url")
+                    Text(text = stringResource(id = R.string.openUrlButtonText))
                 }
             }
         }

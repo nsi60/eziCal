@@ -20,10 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.screens.CustomDisabledTextField
 import com.nsi.ezcalender.ui.screens.CustomTextField
@@ -39,11 +41,11 @@ fun CustomAlertDialog() {
 //            openDialog.value = false
         },
         title = {
-            Text(text = "Loading")
+            Text(text = stringResource(id = R.string.loadingTitle))
         },
         text = {
             Text(
-                "Loading stuff"
+                stringResource(id = R.string.loadingDescription)
             )
         },
         buttons = {
@@ -57,7 +59,7 @@ fun CustomAlertDialog() {
 //                        openDialog.value = false
                     }
                 ) {
-                    Text("Loading")
+                    Text( stringResource(id = R.string.loadingTitle))
                 }
             }
         }
@@ -213,7 +215,7 @@ fun CreateEventDialog(
                                     contentDescription = "c-d"
                                 )
                             }
-                            Text(text = "title")
+                            Text(text =  stringResource(id = R.string.createdEventTitle))
 
                         }
                         Divider()
@@ -228,8 +230,8 @@ fun CreateEventDialog(
                         CustomTextField(
                             text = summaryText,
                             updateText = { summaryText = it },
-                            label = "Summary",
-                            placeHolder = "Christmas Day"
+                            label =   stringResource(id = R.string.eventSummaryLabel),
+                            placeHolder = stringResource(id = R.string.eventSummaryPlaceholder)
                         )
 
                         Row(
@@ -243,8 +245,8 @@ fun CreateEventDialog(
                                 onClick = {
                                     startDatePickerDialog.show()
                                 },
-                                label = "Start date",
-                                placeHolder = "25 December",
+                                label = stringResource(id = R.string.eventStartDateLabel),
+                                placeHolder = stringResource(id = R.string.eventDatePlaceholder),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.DateRange,
@@ -259,8 +261,8 @@ fun CreateEventDialog(
                                 onClick = {
                                     startTimePickerDialog.show()
                                 },
-                                label = "Start time",
-                                placeHolder = "12:00",
+                                label = stringResource(id = R.string.eventStartTimeLabel),
+                                placeHolder = stringResource(id = R.string.eventTimePlaceholder),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Star,
@@ -283,8 +285,8 @@ fun CreateEventDialog(
                                 onClick = {
 //                                endDatePickerDialog.show() //Todo have disabled it for now, handling same day events
                                 },
-                                label = "End date",
-                                placeHolder = "30 December",
+                                label = stringResource(id = R.string.eventEndDateLabel),
+                                placeHolder = stringResource(id = R.string.eventDatePlaceholder),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.DateRange,
@@ -299,8 +301,8 @@ fun CreateEventDialog(
                                 onClick = {
                                     endTimePickerDialog.show()
                                 },
-                                label = "End time",
-                                placeHolder = "23:59",
+                                label = stringResource(id = R.string.eventEndTimeLabel),
+                                placeHolder = stringResource(id = R.string.eventTimePlaceholder),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Star,
@@ -314,22 +316,22 @@ fun CreateEventDialog(
                         CustomTextField(
                             text = locationText,
                             updateText = { locationText = it },
-                            label = "Location",
-                            placeHolder = "420 High Street"
+                            label = stringResource(id = R.string.eventLocationLabel),
+                            placeHolder = stringResource(id = R.string.eventLocationPlaceholder)
                         )
 
                         CustomTextField(
                             text = geoText,
                             updateText = { geoText = it },
-                            label = "Geo Tag",
-                            placeHolder = "4,20"
+                            label = stringResource(id = R.string.eventGeoTagLabel),
+                            placeHolder = stringResource(id = R.string.eventGeoTagPlaceholder)
                         )
 
                         CustomTextField(
                             text = urlText,
                             updateText = { urlText = it },
-                            label = "URL",
-                            placeHolder = "link.com"
+                            label = stringResource(id = R.string.eventUrlLabel),
+                            placeHolder = stringResource(id = R.string.eventUrlPlaceholder)
                         )
                     }
 
@@ -355,7 +357,7 @@ fun CreateEventDialog(
                                         createAnotherEventCheck = it
                                     },
                                 )
-                                Text("Create new event")
+                                Text(stringResource(id = R.string.createNewEventText))
                             }
 
                             Row(
@@ -367,7 +369,7 @@ fun CreateEventDialog(
                                     onClick = {
                                         closeDialog()
                                     }) {
-                                    Text(text = "Cancel")
+                                    Text(text = stringResource(id = R.string.cancelText))
                                 }
 
                                 Button(modifier = Modifier
@@ -383,7 +385,7 @@ fun CreateEventDialog(
                                         )
                                         saveEvent(event, createAnotherEventCheck)
                                     }) {
-                                    Text(text = "Save")
+                                    Text(text = stringResource(id = R.string.saveText))
                                 }
                             }
                         }
@@ -439,7 +441,7 @@ fun ViewEventDialog(
                                     contentDescription = "c-d"
                                 )
                             }
-                            Text(text = "title")
+                            Text(text = event?.summary ?:  stringResource(id = R.string.noTitle))
                         }
                         Divider()
                     }
@@ -453,8 +455,7 @@ fun ViewEventDialog(
                         CustomDisabledTextField(
                             value = event?.summary.toString(),
                             onClick = { },
-                            label = "Summary",
-                            placeHolder = "",
+                            label =   stringResource(id = R.string.eventSummaryLabel),
                             trailingIcon = { }
                         )
 
@@ -469,8 +470,7 @@ fun ViewEventDialog(
                                 onClick = {
                                     //Todo open calendar?
                                 },
-                                label = "Start date",
-                                placeHolder = "",
+                                label = stringResource(id = R.string.eventStartDateLabel),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.DateRange,
@@ -485,8 +485,7 @@ fun ViewEventDialog(
                                 onClick = {
                                     //TODO open Alarm?
                                 },
-                                label = "Start time",
-                                placeHolder = "",
+                                label = stringResource(id = R.string.eventStartTimeLabel),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Star,
@@ -509,8 +508,7 @@ fun ViewEventDialog(
                                 onClick = {
                                     //Todo open calendar?
                                 },
-                                label = "End date",
-                                placeHolder = "",
+                                label = stringResource(id = R.string.eventEndDateLabel),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.DateRange,
@@ -525,8 +523,7 @@ fun ViewEventDialog(
                                 onClick = {
                                     //TODO open Alarm?
                                 },
-                                label = "End time",
-                                placeHolder = "23:59",
+                                label = stringResource(id = R.string.eventEndTimeLabel),
                                 trailingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Star,
@@ -553,8 +550,7 @@ fun ViewEventDialog(
                                     )
                                 )
                             },
-                            label = "Location",
-                            placeHolder = "",
+                            label = stringResource(id = R.string.eventLocationLabel),
                             trailingIcon = { }
                         )
 
@@ -568,8 +564,7 @@ fun ViewEventDialog(
                                     )
                                 )
                             },
-                            label = "Geo Tag",
-                            placeHolder = "",
+                            label = stringResource(id = R.string.eventGeoTagLabel),
                             trailingIcon = { }
                         )
 
@@ -578,8 +573,7 @@ fun ViewEventDialog(
                             onClick = {
                                 //TODO open browser
                             },
-                            label = "URL",
-                            placeHolder = "",
+                            label = stringResource(id = R.string.eventUrlLabel),
                             trailingIcon = { }
                         )
                     }
@@ -598,7 +592,7 @@ fun ViewEventDialog(
                                 onClick = {
                                     closeDialog()
                                 }) {
-                                Text(text = "Close")
+                                Text(text = stringResource(id = R.string.closeText))
                             }
                             //                        }
                         }

@@ -1,3 +1,41 @@
 <resources>
+
+<!--    Screen Titles-->
+    <string name="homeScreen">Home</string>
+    <string name="readFileScreen">View</string>
+    <string name="createFileScreen">Create</string>
+
+
     <string name="app_name">ezCalender</string>
+    <string name="loadingTitle">Loading</string>
+    <string name="loadingDescription">Loading stuff</string>
+    <string name="createdEventTitle">Create Event</string>
+    <string name="eventSummaryLabel">Summary</string>
+    <string name="eventSummaryPlaceholder">Christmas Day</string>
+    <string name="eventStartDateLabel">Start Date</string>
+    <string name="eventDatePlaceholder">dd/yy/mm</string>
+    <string name="eventEndDateLabel">End Date</string>
+    <string name="eventStartTimeLabel">Start Time</string>
+    <string name="eventEndTimeLabel">End Time</string>
+    <string name="eventTimePlaceholder">hh:mm</string>
+    <string name="eventLocationLabel">Location</string>
+    <string name="eventLocationPlaceholder">420 High Street</string>
+    <string name="eventGeoTagLabel">Geo Tag</string>
+    <string name="eventGeoTagPlaceholder">0;0</string>
+    <string name="eventUrlPlaceholder">https://</string>
+    <string name="eventUrlLabel">URL</string>
+    <string name="createNewEventText">Create New event</string>
+    <string name="cancelText">Cancel</string>
+    <string name="saveText">Save</string>
+    <string name="noTitle">No Title</string>
+    <string name="closeText">Close</string>
+    <string name="exportOrSaveText">Export/Save</string>
+    <string name="createEventNoContentDescription">Nothing to show \n Please create an iCalender.</string>
+    <string name="openUrlText">Open URL</string>
+    <string name="openFileText">Open File</string>
+    <string name="openFileDescription">Open a file on the device.</string>
+    <string name="openFileButtonText">Open existing file</string>
+    <string name="openUrlButtonText">Open from url</string>
+    <string name="readEventsNoContentDescription">Nothing to show \n Please open an iCalender on Home Screen</string>
+    <string name="createFileScreenTitle">Create File</string>
 </resources>

@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.model.SortOptions
 import com.nsi.ezcalender.ui.MainViewModel
@@ -95,7 +97,7 @@ fun ReadFileScreenContent(
 
                 EzIcalLogoGif(Modifier.scale(0.5f))
                 Text(
-                    text = "Nothing to show \n Please open an iCalender on Home Screen",
+                    stringResource(id = R.string.readEventsNoContentDescription),
                     textAlign = TextAlign.Center
                 )
 
