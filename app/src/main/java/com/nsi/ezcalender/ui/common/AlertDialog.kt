@@ -357,7 +357,7 @@ fun CreateEventDialog(
                                         createAnotherEventCheck = it
                                     },
                                 )
-                                Text(stringResource(id = R.string.createNewEventText))
+                                Text(stringResource(id = R.string.createAnotherEventText))
                             }
 
                             Row(
@@ -441,7 +441,6 @@ fun ViewEventDialog(
                                     contentDescription = "c-d"
                                 )
                             }
-                            Text(text = event?.summary ?:  stringResource(id = R.string.noTitle))
                         }
                         Divider()
                     }

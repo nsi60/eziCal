@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EZ iCal</string>
+
+
+    <string name="homeScreen">गृहम्</string>
+    <string name="readFileScreen">दृश्यम्</string>
+    <string name="createFileScreen">रचयतु</string>
+
+    <!--    Other-->
+    <string name="loadingTitle">लोड्यते</string>
+    <string name="loadingDescription">सामग्री लोड भवति</string>
+    <string name="createdEventTitle">घटना रचयतु</string>
+    <string name="eventSummaryLabel">सारांश</string>
+    <string name="eventSummaryPlaceholder">महा शिवरात्रि</string>
+    <string name="eventStartDateLabel">प्रारम्भ तिथि</string>
+    <string name="eventDatePlaceholder">दद/मम/वव</string>
+    <string name="eventEndDateLabel">अन्त तिथि</string>
+    <string name="eventStartTimeLabel">प्रारम्भ समयः</string>
+    <string name="eventEndTimeLabel">अन्त समय</string>
+    <string name="eventTimePlaceholder">घघ:क्षक्ष</string>
+    <string name="eventLocationLabel">स्थान</string>
+    <string name="eventLocationPlaceholder">४२० उच्च मार्ग</string>
+    <string name="eventGeoTagLabel">भू टैग</string>
+    <string name="eventGeoTagPlaceholder">०;०</string>
+    <string name="eventUrlPlaceholder">https://</string>
+    <string name="eventUrlLabel">यू आर एल</string>
+    <string name="createAnotherEventText">अन्यं घटनां रचयन्तु</string>
+    <string name="cancelText">रद्द करो</string>
+    <string name="saveText">रक्षतु</string>
+    <string name="noTitle">शीर्षकं नास्ति</string>
+    <string name="closeText">बन्दं कुर्वन्तु</string>
+    <string name="exportOrSaveText">निर्यातम्/रक्षतु</string>
+    <string name="createEventNoContentDescription">किमपि न दर्शयितुं \n कृपया आई-पञ्चाङ्गम् रचयतु।</string>
+    <string name="openUrlText">यू आर एल उद्घाट्यताम्</string>
+    <string name="openFileText">सञ्चिकां उद्घाटयतु</string>
+    <string name="openFileDescription">यन्त्रे सञ्चिकां उद्घाटयन्तु ।</string>
+    <string name="openFileButtonText">विद्यमानं सञ्चिकां उद्घाटयतु</string>
+    <string name="openUrlButtonText">यू आर एल तः उद्घाटयतु</string>
+    <string name="readEventsNoContentDescription">किमपि न दर्शयितव्यं \n कृपया गृहपृष्ठे आई-पञ्चाङ्गम् उद्घाटयन्तु</string>
+    <string name="createFileScreenTitle">सञ्चिकां रचयतु</string>
+
+</resources>

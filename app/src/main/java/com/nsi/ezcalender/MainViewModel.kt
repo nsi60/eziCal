@@ -14,7 +14,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.InputStream
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 data class State(
@@ -31,6 +33,10 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
 
     private val _state = mutableStateOf(State())
     val state: MutableState<State> get() = _state
+
+    suspend fun fetchSomeData() {
+        delay(3000L)
+    }
 
     fun readSelectedFile() {
         icsReader.readSelectedFile(state.value.selectedFileInputStream)
@@ -89,9 +95,7 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
         }
     }
 
-    suspend fun fetchSomeData() {
-        delay(3000L)
-    }
+
 
     fun deleteEvent(event: Event) {
         _state.value.createdEventsList.remove(event)

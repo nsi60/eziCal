@@ -1,12 +1,13 @@
 <resources>
 
-<!--    Screen Titles-->
+    <string name="app_name">EZ iCal</string>
+
+    <!--    Screen Titles-->
     <string name="homeScreen">Home</string>
     <string name="readFileScreen">View</string>
     <string name="createFileScreen">Create</string>
 
-
-    <string name="app_name">ezCalender</string>
+    <!--    Other-->
     <string name="loadingTitle">Loading</string>
     <string name="loadingDescription">Loading stuff</string>
     <string name="createdEventTitle">Create Event</string>
@@ -24,7 +25,7 @@
     <string name="eventGeoTagPlaceholder">0;0</string>
     <string name="eventUrlPlaceholder">https://</string>
     <string name="eventUrlLabel">URL</string>
-    <string name="createNewEventText">Create New event</string>
+    <string name="createAnotherEventText">Create Another event</string>
     <string name="cancelText">Cancel</string>
     <string name="saveText">Save</string>
     <string name="noTitle">No Title</string>

@@ -140,7 +140,7 @@ class ICSReader @Inject constructor() {
                 dtStart = localDateTimeDtStart,
                 dtEnd = localDateTimeDtEnd,
                 location = nE.location.value,
-                geo = nE.geographicPos?.value,
+                geo = nE.geographicPos?.value ?: "0;0", //TODO is this ok?
             )
             this.events.add(event)
 
