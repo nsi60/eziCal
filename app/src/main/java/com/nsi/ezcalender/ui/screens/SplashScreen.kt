@@ -54,17 +54,19 @@ fun SplashScreen(
     }
 
 
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Image(
             painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(context).data(data = R.drawable.logo_gif).apply(block = {
-                    size(Size.ORIGINAL)
-                }).build(), imageLoader = imageLoader
+                ImageRequest.Builder(context).data(data = R.drawable.logo_gif_transparent)
+                    .apply(block = {
+                        size(Size.ORIGINAL)
+                    }).build(), imageLoader = imageLoader
             ),
             contentDescription = null,
 //            modifier = modifier.fillMaxWidth(),
             modifier = Modifier.scale(scale.value)
         )
-
     }
 }
+

@@ -1,6 +1,7 @@
 package com.nsi.ezcalender.ui.screens
 
 import EventComposable
+import EzIcalLogoGif
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -18,9 +19,11 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.ui.MainViewModel
@@ -35,6 +38,7 @@ fun CreateFileScreen(
     navigateUp: () -> Unit
 ) {
     val state = mainViewModel.state.value
+    val context = LocalContext.current
     CreateFileScreenContent(
         createdEvents = state.createdEventsList,
         saveEvent = {
@@ -44,7 +48,7 @@ fun CreateFileScreen(
             mainViewModel.deleteEvent(it)
         },
         exportCalender = {
-            mainViewModel.exportCreatedEvents()
+            mainViewModel.exportCreatedEvents(context.filesDir)
         }
     )
 
@@ -121,7 +125,6 @@ fun CreateFileScreenContent(
         ) {
 
             if (createdEvents.isNotEmpty()) {
-
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,18 +138,22 @@ fun CreateFileScreenContent(
                     }
                 }
                 Divider()
-
-
             } else {
-                Row(
+                Column(
                     Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "Nothing to show.")
-                }
-            }
 
+                    EzIcalLogoGif(Modifier.scale(0.5f))
+                    Text(
+                        text = "Nothing to show \n Please create an iCalender.",
+                        textAlign = TextAlign.Center
+                    )
+
+                }
+
+            }
 
             ViewEventDialog(
                 event = selectedEvent,
@@ -192,12 +199,13 @@ fun CreateFileScreenContent(
                         },
                         dismissContent = {
                             EventComposable(
+                                modifier = Modifier.animateItemPlacement(),
                                 context = context,
                                 event = event,
                                 onClick = {
                                     selectedEvent = it
                                     openViewEventDialog = true
-                            })
+                                })
                         },
 
                         )

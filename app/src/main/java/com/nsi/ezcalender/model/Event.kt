@@ -25,8 +25,8 @@ data class Event(
     val dtStart: LocalDateTime? = null,
     val dtEnd: LocalDateTime? = null,
     val location: String = "420 High Street",
-    val geo: String? = "0,0",
-    val url: String? = null,
+    val geo: String? = "0;0",
+    val url: String? = "link.com",
 
 
 //    var rRule: String = "RRULE:FREQ=YEARLY;INTERVAL=1;BYMONTH=2;BYMONTHDAY=12",

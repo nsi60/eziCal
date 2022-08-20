@@ -10,18 +10,18 @@ import com.nsi.ezcalender.model.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.data.CalendarOutputter
 import net.fortuna.ical4j.data.UnfoldingReader
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component.VEVENT
+import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.model.ValidationException
 import net.fortuna.ical4j.model.component.VEvent
-import net.fortuna.ical4j.model.property.CalScale
-import net.fortuna.ical4j.model.property.ProdId
-import net.fortuna.ical4j.model.property.Uid
-import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.model.property.*
 import net.fortuna.ical4j.util.UidGenerator
-import java.io.File
-import java.io.FileReader
-import java.io.InputStream
+import java.io.*
+import java.net.URI
 import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -30,6 +30,7 @@ import javax.inject.Inject
 
 
 //https://www.webdavsystem.com/server/creating_caldav_carddav/calendar_ics_file_structure/
+//http://ical4j.sourceforge.net/introduction.html
 
 class ICSReader @Inject constructor() {
 
@@ -154,15 +155,103 @@ class ICSReader @Inject constructor() {
             readSelectedFile(inputStream)
         }
 
-    fun createCalender() {
-        val calendar = Calendar()
-        calendar.properties.add(ProdId("-//Ben Fortuna//iCal4j 1.0//EN"))
-        calendar.properties.add(Version.VERSION_2_0)
-        calendar.properties.add(CalScale.GREGORIAN)
+    fun createCalender(createdEventsList: List<Event>, filesDir: File) {
+        val icsCalendar = Calendar()
+        icsCalendar.properties.add(ProdId("-//Ben Fortuna//iCal4j 1.0//EN"))
+        icsCalendar.properties.add(Version.VERSION_2_0)
+        icsCalendar.properties.add(CalScale.GREGORIAN)
+
+
+        // Create a TimeZone
+        val registry = TimeZoneRegistryFactory.getInstance().createRegistry()
+        val timezone = registry.getTimeZone(TimeZone.getDefault().id)
+        val tz = timezone.vTimeZone
+
+        val startDate = GregorianCalendar()
+        startDate.timeZone = timezone
+        val endDate = GregorianCalendar()
+        endDate.timeZone = timezone
+
+
+        // Add events, etc..
+        for (event in createdEventsList) {
+
+            // Start Date
+            startDate[java.util.Calendar.MONTH] = event.dtStart?.monthValue!!
+            startDate[java.util.Calendar.DAY_OF_MONTH] = event.dtStart.dayOfMonth
+            startDate[java.util.Calendar.YEAR] = event.dtStart.year
+            startDate[java.util.Calendar.HOUR_OF_DAY] = event.dtStart.hour
+            startDate[java.util.Calendar.MINUTE] = event.dtStart.minute
+            startDate[java.util.Calendar.SECOND] = 0
+
+            // END Date
+            endDate[java.util.Calendar.MONTH] = event.dtEnd?.monthValue!!
+            endDate[java.util.Calendar.DAY_OF_MONTH] = event.dtEnd.dayOfMonth
+            endDate[java.util.Calendar.YEAR] = event.dtEnd.year
+            endDate[java.util.Calendar.HOUR_OF_DAY] = event.dtEnd.hour
+            endDate[java.util.Calendar.MINUTE] = event.dtEnd.minute
+            endDate[java.util.Calendar.SECOND] = 0
+
+            // Create the event
+            val vEvent = VEvent(DateTime(startDate.time), DateTime(endDate.time), event.summary)
+
+            //add timezone
+            vEvent.properties.add(tz.timeZoneId)
+
+
+            // add unique identifier
+//            val ug = UidGenerator("uidGen")
+//            val uid = ug.generateUid()
+            vEvent.properties.add(event.uid)
+
+//            // add unique identifier..
+//            vEvent.properties.getProperty(Property.LOCATION).value = "event.location"
+
+            //add location to event
+            vEvent.properties.add(Location(event.location))
+
+            //add geo to event
+            vEvent.properties.add(Geo(event.geo))
+
+            //add url to event
+            vEvent.properties.add(Url(URI(event.url)))
+
+            // Add the event and print
+            icsCalendar.components.add(vEvent)
+        }
+        saveIcsfile(filesDir = filesDir, icsCalendar = icsCalendar)
+
     }
 
-    suspend fun generateUid(): Uid? =
+    private fun saveIcsfile(filesDir: File, filename: String = "myIcs.ics", icsCalendar: Calendar) {
+        val file = File(filesDir, filename) //context.getFilesDir()  //TODO is this ok?
 
+        var fout: FileOutputStream? = null
+        try {
+            fout = FileOutputStream(file)
+            val outputter = CalendarOutputter()
+            outputter.output(icsCalendar, fout)  //TODO doesnt show up in files.
+            readSelectedFile(FileInputStream(file))  //TODO if it shows up in files, this can be done manually.
+
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        } catch (e: ValidationException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
+
+
+    suspend fun generateUid(): Uid? =
         withContext(Dispatchers.Default) {
             val uidGenerator = UidGenerator("1")
             uidGenerator.generateUid()

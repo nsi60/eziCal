@@ -31,6 +31,7 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var icsReader: ICSReader
 
+
     private val requestPermissionLauncher =
         registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()

@@ -85,7 +85,7 @@ fun CreateEventDialog(
 
     var locationText by remember { mutableStateOf(TextFieldValue("")) }
     var geoText by remember { mutableStateOf(TextFieldValue("")) }
-    var linkText by remember { mutableStateOf(TextFieldValue("")) }
+    var urlText by remember { mutableStateOf(TextFieldValue("")) }
 
     val calendar by remember { mutableStateOf(Calendar.getInstance()) }
 
@@ -326,8 +326,8 @@ fun CreateEventDialog(
                         )
 
                         CustomTextField(
-                            text = linkText,
-                            updateText = { linkText = it },
+                            text = urlText,
+                            updateText = { urlText = it },
                             label = "URL",
                             placeHolder = "link.com"
                         )
@@ -378,7 +378,8 @@ fun CreateEventDialog(
                                             dtStart = dateStartObject, //dateStartText.text,
                                             dtEnd = dateEndObject, //dateEndText.text,
                                             location = locationText.text.ifEmpty { "" },
-                                            geo = geoText.text.ifEmpty { "0,0" }
+                                            geo = geoText.text.ifEmpty { "0;0" },
+                                            url = urlText.text.ifEmpty { "link.com" }
                                         )
                                         saveEvent(event, createAnotherEventCheck)
                                     }) {

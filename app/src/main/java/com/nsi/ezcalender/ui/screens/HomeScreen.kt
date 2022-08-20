@@ -1,11 +1,12 @@
 package com.nsi.ezcalender.ui.screens
 
+import EzIcalLogoGif
+import EzIcalLogoStatic
 import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,17 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
-import coil.size.Size
-import com.nsi.ezcalender.R
 import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.State
 
@@ -117,30 +111,12 @@ fun HomeScreenContent(
                 },
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val imageLoader = remember {
-
-                ImageLoader.Builder(context)
-                    .components {
-                        add(ImageDecoderDecoder.Factory())
-                    }
-                    .build()
-            }
-
             AnimatedVisibility(
                 visible = animateLogo,
                 enter = slideInVertically(),
                 exit = slideOutHorizontally()
             ) {
-
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(context).data(data = R.drawable.logo_gif)
-                            .apply(block = {
-                                size(Size.ORIGINAL)
-                            }).build(), imageLoader = imageLoader
-                    ),
-                    contentDescription = null,
-                )
+                EzIcalLogoGif()
             }
             AnimatedVisibility(
                 visible = !animateLogo,
@@ -149,10 +125,7 @@ fun HomeScreenContent(
 
                 )
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_static),
-                    contentDescription = "Logo",
-                )
+                EzIcalLogoStatic()
             }
 
         }

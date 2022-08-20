@@ -1,5 +1,4 @@
 import android.content.Context
-import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
@@ -11,8 +10,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.model.Event
-import com.nsi.ezcalender.ui.screens.startImplicitIntent
-import java.net.URLEncoder
 
 @Composable
 fun EventComposable(

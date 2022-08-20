@@ -1,6 +1,7 @@
 package com.nsi.ezcalender.ui.screens
 
 import EventComposable
+import EzIcalLogoGif
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -19,7 +20,9 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
 import com.nsi.ezcalender.model.Event
@@ -72,7 +75,10 @@ fun ReadFileScreenContent(
     var openDialog by remember { mutableStateOf(false) }
     var selectedEvent: Event? by remember { mutableStateOf(null) }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(bottom = 60.dp)
+    ) {
 
         if (events.isNotEmpty()) {
             SortOptions(
@@ -81,12 +87,18 @@ fun ReadFileScreenContent(
                 sortByLocationName = sortByLocationName
             )
         } else {
-            Row(
+            Column(
                 Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Nothing to show.")
+
+                EzIcalLogoGif(Modifier.scale(0.5f))
+                Text(
+                    text = "Nothing to show \n Please open an iCalender on Home Screen",
+                    textAlign = TextAlign.Center
+                )
+
             }
         }
 
