@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
+import com.nsi.ezcalender.ui.common.ConfirmationAlertDialog
 import com.nsi.ezcalender.ui.common.CreateEventDialog
 import com.nsi.ezcalender.ui.common.ViewEventDialog
 import kotlinx.coroutines.delay
@@ -45,11 +46,13 @@ fun CreateFileScreen(
 
     var openCreateEventDialog by rememberSaveable { mutableStateOf(false) }
     var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
+    var exportEventsDialog by rememberSaveable { mutableStateOf(false) }
 
 
     CreateFileScreenContent(
         openViewEventDialog = openViewEventDialog,
         openCreateEventDialog = openCreateEventDialog,
+        exportEventsDialog = exportEventsDialog,
         createdEvents = state.createdEventsList,
         saveEvent = {
             mainViewModel.saveCreatedEvent(it)
@@ -65,6 +68,12 @@ fun CreateFileScreen(
         },
         updateViewEventDialog = {
             openViewEventDialog = it
+        },
+        updateExportEventsDialog = {
+            exportEventsDialog = it
+        },
+        clearCreatedEvents = {
+            mainViewModel.clearCreatedEvents()
         }
     )
 
@@ -83,14 +92,16 @@ fun CreateFileScreen(
 fun CreateFileScreenContent(
     openViewEventDialog: Boolean,
     openCreateEventDialog: Boolean,
+    exportEventsDialog: Boolean,
     createdEvents: SnapshotStateList<Event>,
     saveEvent: (Event) -> Unit,
     deleteEvent: (Event) -> Unit,
     exportCalender: () -> Unit,
     updateViewEventDialog: (Boolean) -> Unit,
     updateCreateEventDialog: (Boolean) -> Unit,
-
-    ) {
+    updateExportEventsDialog: (Boolean) -> Unit,
+    clearCreatedEvents: () -> Unit
+) {
 
 
     val context = LocalContext.current
@@ -154,10 +165,16 @@ fun CreateFileScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    IconButton(onClick = {
+                        clearCreatedEvents()
+                    }) {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = "c-d")
+                    }
                     Button(onClick = {
-                        exportCalender()
+                        updateExportEventsDialog(true)
+//                        exportCalender()
                     }) {
                         Text(stringResource(id = R.string.exportOrSaveText))
                     }
@@ -192,6 +209,23 @@ fun CreateFileScreenContent(
                     closeDialog = {
                         updateViewEventDialog(false)
 //                        openViewEventDialog = false
+                    }
+                )
+            }
+
+            if (exportEventsDialog) {
+                ConfirmationAlertDialog(
+                    title = "export event",
+                    description = "description",
+                    positiveButtonText = "save",
+                    negativeButtonText = "cancel",
+                    onPositiveAction = {
+                        exportCalender()
+                        updateExportEventsDialog(false)
+
+                    },
+                    onNegativeAction = {
+                        updateExportEventsDialog(false)
                     }
                 )
             }

@@ -114,5 +114,9 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
         }
     }
 
+    fun clearCreatedEvents() {
+        _state.value.createdEventsList.clear()
+    }
+
 }
 

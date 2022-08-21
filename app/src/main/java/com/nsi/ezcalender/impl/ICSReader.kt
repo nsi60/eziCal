@@ -114,7 +114,7 @@ class ICSReader @Inject constructor() {
 //            true
 //        )
 
-        try {
+        return try {
             val builder = CalendarBuilder()
             val dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")
             events = mutableListOf<Event>()
@@ -141,9 +141,9 @@ class ICSReader @Inject constructor() {
                 this.events.add(event)
             }
 
-            return ICSReaderResult.Success(this.events)
+            ICSReaderResult.Success(this.events)
         } catch (e: Exception) {
-            return ICSReaderResult.Error("errorOpeningFile")
+            ICSReaderResult.Error("errorOpeningFile")
         }
     }
 
@@ -161,7 +161,7 @@ class ICSReader @Inject constructor() {
 
 
     fun createCalender(createdEventsList: List<Event>, filesDir: File): ICSReaderResult {
-        try {
+        return try {
             val icsCalendar = Calendar()
             icsCalendar.properties.add(ProdId("-//Ben Fortuna//iCal4j 1.0//EN"))
             icsCalendar.properties.add(Version.VERSION_2_0)
@@ -225,9 +225,9 @@ class ICSReader @Inject constructor() {
                 // Add the event and print
                 icsCalendar.components.add(vEvent)
             }
-            return saveIcsfile(filesDir = filesDir, icsCalendar = icsCalendar)
+            saveIcsfile(filesDir = filesDir, icsCalendar = icsCalendar)
         } catch (e: Exception) {
-            return ICSReaderResult.Error("errorCreatingCalander")
+            ICSReaderResult.Error("errorCreatingCalander")
         }
 
     }
@@ -240,14 +240,14 @@ class ICSReader @Inject constructor() {
         val file = File(filesDir, filename) //context.getFilesDir()  //TODO is this ok?
 
         var fout: FileOutputStream? = null
-        try {
+        return try {
             fout = FileOutputStream(file)
             val outputter = CalendarOutputter()
             outputter.output(icsCalendar, fout)  //TODO doesnt show up in files.
-            return readInputStream(FileInputStream(file))  //TODO if it shows up in files, this can be done manually.
+            readInputStream(FileInputStream(file))  //TODO if it shows up in files, this can be done manually.
 
         } catch (e: java.lang.Exception) {
-            return ICSReaderResult.Error("errorSavingFile")
+            ICSReaderResult.Error("errorSavingFile")
         }
     }
 

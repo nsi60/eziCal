@@ -83,6 +83,54 @@ fun LoadingAlertDialog(
 
 }
 
+@Composable
+fun ConfirmationAlertDialog(
+    title: String,
+    description: String,
+    positiveButtonText: String,
+    negativeButtonText: String,
+    onPositiveAction: () -> Unit,
+    onNegativeAction: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = {
+        },
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(
+                description
+            )
+        },
+        buttons = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(all = 8.dp),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                Button(
+                    onClick = {
+                        onNegativeAction()
+                    }
+                ) {
+                    Text(negativeButtonText)
+                }
+
+                Button(
+                    onClick = {
+                        onPositiveAction()
+                    }
+                ) {
+                    Text(positiveButtonText)
+                }
+            }
+        }
+    )
+
+}
+
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
