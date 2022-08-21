@@ -8,8 +8,6 @@
     <string name="createFileScreen">Create</string>
 
     <!--    Other-->
-    <string name="loadingTitle">Loading</string>
-    <string name="loadingDescription">Loading stuff</string>
     <string name="createdEventTitle">Create Event</string>
     <string name="eventSummaryLabel">Summary</string>
     <string name="eventSummaryPlaceholder">Christmas Day</string>
@@ -25,7 +23,7 @@
     <string name="eventGeoTagPlaceholder">0;0</string>
     <string name="eventUrlPlaceholder">https://</string>
     <string name="eventUrlLabel">URL</string>
-    <string name="createAnotherEventText">Create Another event</string>
+    <string name="createAnotherEventText">Create Another</string>
     <string name="cancelText">Cancel</string>
     <string name="saveText">Save</string>
     <string name="noTitle">No Title</string>
@@ -39,4 +37,15 @@
     <string name="openUrlButtonText">Open from url</string>
     <string name="readEventsNoContentDescription">Nothing to show \n Please open an iCalender on Home Screen</string>
     <string name="createFileScreenTitle">Create File</string>
+    <string name="sort">Sort:</string>
+
+    <!--    Alert Dialog-->
+    <string name="loadingTitle">Loading</string>
+    <string name="loadingDescription">Loading Stuff</string>
+    <string name="errorTitle" translatable="false">Error</string>
+    <string name="errorOpeningFile" translatable="false">errorOpeningFile</string>
+    <string name="errorOpeningUrl" translatable="false">errorOpeningUrl</string>
+    <string name="unknownError" translatable="false">unknownError</string>
+
+
 </resources>

@@ -8,8 +8,6 @@
     <string name="createFileScreen">रचयतु</string>
 
     <!--    Other-->
-    <string name="loadingTitle">लोड्यते</string>
-    <string name="loadingDescription">सामग्री लोड भवति</string>
     <string name="createdEventTitle">घटना रचयतु</string>
     <string name="eventSummaryLabel">सारांश</string>
     <string name="eventSummaryPlaceholder">महा शिवरात्रि</string>
@@ -25,7 +23,7 @@
     <string name="eventGeoTagPlaceholder">०;०</string>
     <string name="eventUrlPlaceholder">https://</string>
     <string name="eventUrlLabel">यू आर एल</string>
-    <string name="createAnotherEventText">अन्यं घटनां रचयन्तु</string>
+    <string name="createAnotherEventText">अन्यं रचयन्तु</string>
     <string name="cancelText">रद्द करो</string>
     <string name="saveText">रक्षतु</string>
     <string name="noTitle">शीर्षकं नास्ति</string>
@@ -39,5 +37,15 @@
     <string name="openUrlButtonText">यू आर एल तः उद्घाटयतु</string>
     <string name="readEventsNoContentDescription">किमपि न दर्शयितव्यं \n कृपया गृहपृष्ठे आई-पञ्चाङ्गम् उद्घाटयन्तु</string>
     <string name="createFileScreenTitle">सञ्चिकां रचयतु</string>
+    <string name="sort">क्रम:</string>
+
+
+    <!--    Alert Dialog-->
+    <string name="loadingTitle">लोड्यते</string>
+    <string name="loadingDescription">सामग्री लोड भवति</string>
+    <string name="errorTitle" translatable="false">दोषः</string>
+    <string name="errorOpeningFile" translatable="false">सञ्चिका उद्घाटन त्रुटि</string>
+    <string name="errorOpeningUrl" translatable="false">यू आर एल उद्घाटन त्रुटि</string>
+    <string name="unknownError" translatable="false">अज्ञात दोषः</string>
 
 </resources>

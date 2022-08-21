@@ -5,7 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nsi.ezcalender.ui.MainViewModel
+import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.ui.screens.*
 
 @Composable

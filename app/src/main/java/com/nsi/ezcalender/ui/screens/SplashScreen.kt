@@ -18,8 +18,8 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
-import com.nsi.ezcalender.ui.MainViewModel
 
 
 @Composable

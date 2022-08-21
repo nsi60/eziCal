@@ -34,38 +34,52 @@ import com.nsi.ezcalender.ui.screens.CustomTextField
 import com.nsi.ezcalender.ui.screens.startImplicitIntent
 import java.net.URLEncoder
 import java.time.LocalDateTime
-import java.util.*
 
 @Composable
-fun LoadingAlertDialog() {
-    AlertDialog(
-        onDismissRequest = {
+fun LoadingAlertDialog(
+    title: String,
+    description: String,
+    dismissible: Boolean,
+    onDismiss: () -> Unit
+) {
+    var openDialog by rememberSaveable { mutableStateOf(true) }
+
+    if (openDialog) {
+
+        AlertDialog(
+            onDismissRequest = {
 //            openDialog.value = false
-        },
-        title = {
-            Text(text = stringResource(id = R.string.loadingTitle))
-        },
-        text = {
-            Text(
-                stringResource(id = R.string.loadingDescription)
-            )
-        },
-        buttons = {
-            Row(
-                modifier = Modifier.padding(all = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Button(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = {
-//                        openDialog.value = false
-                    }
+            },
+            title = {
+                Text(text = title)//stringResource(id = R.string.loadingTitle))
+            },
+            text = {
+                Text(
+                    description
+                    //stringResource(id = R.string.loadingDescription)
+                )
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier.padding(all = 8.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(stringResource(id = R.string.loadingTitle))
+                    Button(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+//                        openDialog.value = false
+                            if (dismissible) {
+                                openDialog = false
+                            }
+                            onDismiss()
+                        }
+                    ) {
+                        Text(title)//stringResource(id = R.string.loadingTitle))
+                    }
                 }
             }
-        }
-    )
+        )
+    }
 
 }
 
@@ -218,8 +232,13 @@ fun CreateEventDialog(
 
     if (openDialog) {
         Dialog(
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = {}
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = true
+            ),
+            onDismissRequest = {
+                closeDialog()
+            }
         ) {
             Surface(
                 modifier = Modifier
@@ -439,12 +458,18 @@ fun ViewEventDialog(
     openDialog: Boolean,
     closeDialog: () -> Unit,
 ) {
+
     val context = LocalContext.current
 
     if (openDialog) {
         Dialog(
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = {}
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = true
+            ),
+            onDismissRequest = {
+                closeDialog()
+            }
         ) {
             Surface(
                 modifier = Modifier

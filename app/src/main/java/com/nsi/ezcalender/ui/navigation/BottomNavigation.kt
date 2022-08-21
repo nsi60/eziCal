@@ -4,9 +4,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.nsi.ezcalender.ui.common.getResourceByName
 import com.nsi.ezcalender.ui.screens.Screens
 
 @Composable
@@ -28,7 +28,7 @@ fun BottomNavigationThing(
         val currentRoute = navBackStackEntry?.destination?.route
         items.forEach { item ->
             BottomNavigationItem(
-                label = { Text(text = getString(item.route)) },
+                label = { Text(text = getResourceByName(item.route)) },
                 selected = currentRoute == item.route,
                 selectedContentColor = Color.Black,
                 unselectedContentColor = Color.Black.copy(0.4f),
@@ -51,17 +51,7 @@ fun BottomNavigationThing(
     }
 }
 
-@Composable
-fun getString(name: String): String {
-    val context = LocalContext.current
-    return context.resources.getString(
-        context.resources.getIdentifier(
-            name,
-            "string",
-            context.packageName
-        )
-    )
-}
+
 
 
 

@@ -21,12 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
-import com.nsi.ezcalender.ui.MainViewModel
-import com.nsi.ezcalender.ui.State
+import com.nsi.ezcalender.State
 
 
 @Composable

@@ -1,4 +1,4 @@
-package com.nsi.ezcalender.ui
+package com.nsi.ezcalender
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -7,6 +7,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nsi.ezcalender.impl.ICSReader
+import com.nsi.ezcalender.impl.ICSReaderResult
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.model.SortOptions
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,13 +15,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.InputStream
-import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 data class State(
     val isLoading: Boolean = false,
+    val error: ICSReaderResult.Error? = null,
     val eventsList: List<Event> = emptyList<Event>(),
     var createdEventsList: SnapshotStateList<Event> = mutableStateListOf(),
     val selectedFileInputStream: InputStream? = null,
@@ -39,17 +39,17 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
     }
 
     fun readSelectedFile() {
-        icsReader.readSelectedFile(state.value.selectedFileInputStream)
-        val events = icsReader.getEvents()
-        events.sortBy { it.dtStart }
-        _state.value = state.value.copy(eventsList = events)
+        val result = icsReader.readInputStream(state.value.selectedFileInputStream)
+        processResult(result)
+
+
     }
 
     fun setSelectedFileInputStream(inputStream: InputStream?) {
         _state.value = state.value.copy(selectedFileInputStream = inputStream)
     }
 
-    fun sortEvents() {
+    private fun sortEvents() {
         val events = state.value.eventsList.toMutableList()
         when (state.value.sortOptions) {
             SortOptions.DATE_START -> {
@@ -77,11 +77,8 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
     fun openFromUrl() {
         viewModelScope.launch {
             _state.value = state.value.copy(isLoading = true)
-            icsReader.openFromUrl2(state.value.icsFileUrl)
-            val events = icsReader.getEvents()
-            events.sortBy { it.dtStart }
-            _state.value = state.value.copy(eventsList = events)
-            _state.value = state.value.copy(isLoading = false)
+            val result = icsReader.openFromUrl2(state.value.icsFileUrl)
+            processResult(result)
 
         }
     }
@@ -91,10 +88,9 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
             val uid = icsReader.generateUid()
             event.uid = uid
             _state.value.createdEventsList.add(event)
-            _state.value.createdEventsList.sortBy { it.dtStart }
+//            _state.value.createdEventsList.sortBy { it.dtStart } //Todo if we want to sort
         }
     }
-
 
 
     fun deleteEvent(event: Event) {
@@ -102,12 +98,20 @@ class MainViewModel @Inject constructor(private val icsReader: ICSReader) : View
     }
 
     fun exportCreatedEvents(filesDir: File) {
-        icsReader.createCalender(state.value.createdEventsList.toList(), filesDir)
+        val result = icsReader.createCalender(state.value.createdEventsList.toList(), filesDir)
+        processResult(result)
 
-        val events = icsReader.getEvents()
-        events.sortBy { it.dtStart }
-        _state.value = state.value.copy(eventsList = events)
+    }
 
+    private fun processResult(result: ICSReaderResult) {
+
+        if (result is ICSReaderResult.Success) {
+            val events = result.data.toMutableList()
+            _state.value = state.value.copy(eventsList = events, error = null, isLoading = false)
+            sort(SortOptions.DATE_START)
+        } else if (result is ICSReaderResult.Error) {
+            _state.value = state.value.copy(error = result, isLoading = false)
+        }
     }
 
 }

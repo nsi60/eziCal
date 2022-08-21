@@ -8,7 +8,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -28,9 +27,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
-import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.CreateEventDialog
 import com.nsi.ezcalender.ui.common.ViewEventDialog
 import kotlinx.coroutines.delay
@@ -43,7 +42,14 @@ fun CreateFileScreen(
 ) {
     val state = mainViewModel.state.value
     val context = LocalContext.current
+
+    var openCreateEventDialog by rememberSaveable { mutableStateOf(false) }
+    var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
+
+
     CreateFileScreenContent(
+        openViewEventDialog = openViewEventDialog,
+        openCreateEventDialog = openCreateEventDialog,
         createdEvents = state.createdEventsList,
         saveEvent = {
             mainViewModel.saveCreatedEvent(it)
@@ -53,6 +59,12 @@ fun CreateFileScreen(
         },
         exportCalender = {
             mainViewModel.exportCreatedEvents(context.filesDir)
+        },
+        updateCreateEventDialog = {
+            openCreateEventDialog = it
+        },
+        updateViewEventDialog = {
+            openViewEventDialog = it
         }
     )
 
@@ -69,20 +81,22 @@ fun CreateFileScreen(
 )
 @Composable
 fun CreateFileScreenContent(
+    openViewEventDialog: Boolean,
+    openCreateEventDialog: Boolean,
     createdEvents: SnapshotStateList<Event>,
     saveEvent: (Event) -> Unit,
     deleteEvent: (Event) -> Unit,
-    exportCalender: () -> Unit
+    exportCalender: () -> Unit,
+    updateViewEventDialog: (Boolean) -> Unit,
+    updateCreateEventDialog: (Boolean) -> Unit,
 
-) {
+    ) {
 
-    var openDialog by rememberSaveable { mutableStateOf(false) }
-    var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 //    var selectedEvent: Event? by rememberSaveable { mutableStateOf(createdEvents.ifEmpty { null }?.get(0)) } //TODO crashes  on rotate
-    var selectedEvent: Int? by rememberSaveable { mutableStateOf(if (createdEvents.isEmpty()) null else 0 ) }
+    var selectedEvent: Int? by rememberSaveable { mutableStateOf(if (createdEvents.isEmpty()) null else 0) }
 
 
     Scaffold(floatingActionButton = {
@@ -95,7 +109,8 @@ fun CreateFileScreenContent(
         ) {
             FloatingActionButton(
                 onClick = {
-                    openDialog = true
+                    updateCreateEventDialog(true)
+//                    openCreateEventDialog = true
                 }
             ) {
                 Icon(Icons.Filled.Add, contentDescription = "c-d")
@@ -106,19 +121,24 @@ fun CreateFileScreenContent(
     ) {
 
         CreateEventDialog(
-            openDialog,
+            openCreateEventDialog,
             saveEvent = { event, createAnotherEvent ->
                 saveEvent(event)
                 scope.launch {
-                    openDialog = false  //TODO add a checkbox for creating new event
+                    updateCreateEventDialog(false)
+//                    openCreateEventDialog = false  //TODO add a checkbox for creating new event
                     if (createAnotherEvent) {
                         delay(500)
-                        openDialog = true
+                        updateCreateEventDialog(true)
+//                        openCreateEventDialog = true
                     }
                 }
 
             },
-            closeDialog = { openDialog = false },
+            closeDialog = {
+                updateCreateEventDialog(false)
+//                openCreateEventDialog = false
+            },
         )
 
 
@@ -169,13 +189,16 @@ fun CreateFileScreenContent(
                 ViewEventDialog(
                     event = createdEvents[selectedEvent!!],
                     openDialog = openViewEventDialog,
-                    closeDialog = { openViewEventDialog = false }
+                    closeDialog = {
+                        updateViewEventDialog(false)
+//                        openViewEventDialog = false
+                    }
                 )
             }
 
             LazyColumn {
 
-                itemsIndexed(items = createdEvents, key = {_, event -> event.uid!! }
+                itemsIndexed(items = createdEvents, key = { _, event -> event.uid!! }
                 ) { index, event ->
                     val dismissState = rememberDismissState(
                         confirmStateChange = {
@@ -216,7 +239,8 @@ fun CreateFileScreenContent(
                                 event = event,
                                 onClick = {
                                     selectedEvent = index //it
-                                    openViewEventDialog = true
+                                    updateViewEventDialog(true)
+//                                    openViewEventDialog = true
                                 })
                         },
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -30,12 +31,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
 import com.nsi.ezcalender.model.SortOptions
-import com.nsi.ezcalender.ui.MainViewModel
 import com.nsi.ezcalender.ui.common.LoadingAlertDialog
 import com.nsi.ezcalender.ui.common.ViewEventDialog
+import com.nsi.ezcalender.ui.common.getResourceByName
 
 @Composable
 fun ReadFileScreen(
@@ -43,13 +45,27 @@ fun ReadFileScreen(
     navigateUp: () -> Unit
 ) {
     val state = mainViewModel.state.value
+    var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
 
     if (state.isLoading) {
-        LoadingAlertDialog()
+        LoadingAlertDialog(
+            stringResource(id = R.string.loadingTitle),
+            stringResource(id = R.string.loadingDescription),
+            false
+        ) {}
+    } else if (state.error != null) {
+        LoadingAlertDialog(
+            stringResource(id = R.string.errorTitle),
+            getResourceByName(state.error.message),
+            true
+        ) {
+            navigateUp()
+        }
     }
 
 
     ReadFileScreenContent(
+        openViewEventDialog = openViewEventDialog,
         events = state.eventsList,
         sortByDate = {
             mainViewModel.sort(SortOptions.DATE_START)
@@ -59,6 +75,9 @@ fun ReadFileScreen(
         },
         sortByLocationName = {
             mainViewModel.sort(SortOptions.LOCATION_NAME)
+        },
+        updateViewEventDialog = {
+            openViewEventDialog = it
         }
     )
 
@@ -71,15 +90,15 @@ fun ReadFileScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReadFileScreenContent(
+    openViewEventDialog: Boolean,
     events: List<Event>,
     sortByDate: () -> Unit,
     sortBySummary: () -> Unit,
-    sortByLocationName: () -> Unit
+    sortByLocationName: () -> Unit,
+    updateViewEventDialog: (Boolean) -> Unit,
 
-) {
+    ) {
     val context = LocalContext.current
-    var openDialog by rememberSaveable { mutableStateOf(false) }
-//    var selectedEvent: Event? by remember { mutableStateOf(null) }  //TODO crashes  on null
     var selectedEvent: Int? by rememberSaveable { mutableStateOf(if (events.isEmpty()) null else 0) }
 
     Column(
@@ -94,6 +113,7 @@ fun ReadFileScreenContent(
                 sortBySummary = sortBySummary,
                 sortByLocationName = sortByLocationName
             )
+            Divider()
         } else {
             Column(
                 Modifier.fillMaxSize(),
@@ -114,11 +134,13 @@ fun ReadFileScreenContent(
 
             }
         }
-        if (openDialog) {
+        if (openViewEventDialog) {
             ViewEventDialog(
                 event = events[selectedEvent!!],
-                openDialog = openDialog,
-                closeDialog = { openDialog = false }
+                openDialog = openViewEventDialog,
+                closeDialog = {
+                    updateViewEventDialog(false)
+                }
             )
         }
 
@@ -131,7 +153,7 @@ fun ReadFileScreenContent(
                     event,
                     onClick = {
                         selectedEvent = index //it
-                        openDialog = true
+                        updateViewEventDialog(true)
                     }
                 )
             }
@@ -151,8 +173,10 @@ fun SortOptions(
         Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceAround
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        Text(stringResource(id = R.string.sort))
         IconButton(onClick = {
             sortByDate()
         }) {
