@@ -42,10 +42,11 @@
     <!--    Alert Dialog-->
     <string name="loadingTitle">Loading</string>
     <string name="loadingDescription">Loading Stuff</string>
-    <string name="errorTitle" translatable="false">Error</string>
-    <string name="errorOpeningFile" translatable="false">errorOpeningFile</string>
-    <string name="errorOpeningUrl" translatable="false">errorOpeningUrl</string>
-    <string name="unknownError" translatable="false">unknownError</string>
+    <string name="errorTitle" >Error</string>
+    <string name="errorOpeningFile">errorOpeningFile</string>
+    <string name="errorOpeningUrl" >errorOpeningUrl</string>
+    <string name="unknownError" >unknownError</string>
+    <string name="exportOrSaveDescription" >Are you sure you want to export the iCalendar?</string>
 
 
 </resources>

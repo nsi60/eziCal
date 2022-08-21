@@ -215,10 +215,10 @@ fun CreateFileScreenContent(
 
             if (exportEventsDialog) {
                 ConfirmationAlertDialog(
-                    title = "export event",
-                    description = "description",
-                    positiveButtonText = "save",
-                    negativeButtonText = "cancel",
+                    title = stringResource(id = R.string.exportOrSaveText),
+                    description = stringResource(id = R.string.exportOrSaveDescription),
+                    positiveButtonText = stringResource(id = R.string.saveText),
+                    negativeButtonText = stringResource(id = R.string.cancelText),
                     onPositiveAction = {
                         exportCalender()
                         updateExportEventsDialog(false)

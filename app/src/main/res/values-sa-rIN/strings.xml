@@ -47,5 +47,6 @@
     <string name="errorOpeningFile" translatable="false">सञ्चिका उद्घाटन त्रुटि</string>
     <string name="errorOpeningUrl" translatable="false">यू आर एल उद्घाटन त्रुटि</string>
     <string name="unknownError" translatable="false">अज्ञात दोषः</string>
+    <string name="exportOrSaveDescription" >किं भवान् निश्चितरूपेण आई-पञ्चाङ्गम् निर्यातयितुम् इच्छति?</string>
 
 </resources>
