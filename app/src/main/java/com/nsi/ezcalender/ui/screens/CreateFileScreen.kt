@@ -42,7 +42,6 @@ fun CreateFileScreen(
     navigateUp: () -> Unit
 ) {
     val state = mainViewModel.state.value
-    val context = LocalContext.current
 
     var openCreateEventDialog by rememberSaveable { mutableStateOf(false) }
     var openViewEventDialog by rememberSaveable { mutableStateOf(false) }
@@ -61,7 +60,7 @@ fun CreateFileScreen(
             mainViewModel.deleteEvent(it)
         },
         exportCalender = {
-            mainViewModel.exportCreatedEvents(context.filesDir)
+            mainViewModel.exportCreatedEvents()
         },
         updateCreateEventDialog = {
             openCreateEventDialog = it

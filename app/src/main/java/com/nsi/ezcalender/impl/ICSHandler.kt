@@ -4,14 +4,12 @@ package com.nsi.ezcalender.impl
 //import biweekly.ICalendar
 //import biweekly.component.VEvent
 
-import android.net.Uri
 import android.os.Environment
 import com.nsi.ezcalender.model.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.CalendarOutputter
-import net.fortuna.ical4j.data.UnfoldingReader
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Component.VEVENT
 import net.fortuna.ical4j.model.DateTime
@@ -31,84 +29,17 @@ import javax.inject.Inject
 //https://www.webdavsystem.com/server/creating_caldav_carddav/calendar_ics_file_structure/
 //http://ical4j.sourceforge.net/introduction.html
 
-class ICSReader @Inject constructor() {
+class ICSHandler @Inject constructor() {
 
     private lateinit var events: MutableList<Event>
-    private val initialFileOpenUri =
-        Uri.parse(Environment.getExternalStorageDirectory().absolutePath + "/Download/")
-
-    var string = """
-        BEGIN:VCALENDAR
-        VERSION:2.0
-        PRODID:-//Microsoft Corporation//Outlook 14.0 MIMEDIR//EN
-        
-        BEGIN:VEVENT
-        UID:0123
-        DTSTAMP:20130601T080000Z
-        SUMMARY;LANGUAGE=en-us:Team Meeting
-        DTSTART:20130610T120000Z
-        DURATION:PT1H
-        RRULE:FREQ=WEEKLY;INTERVAL=2
-        END:VEVENT
-        
-        BEGIN:VEVENT
-        UID:0123
-        DTSTAMP:20130601T080000Z
-        SUMMARY;LANGUAGE=en-us:Team Meeting
-        DTSTART:20130610T120000Z
-        DURATION:PT1H
-        RRULE:FREQ=WEEKLY;INTERVAL=2
-        END:VEVENT
-        
-        BEGIN:VEVENT
-        UID:0123
-        DTSTAMP:20130601T080000Z
-        SUMMARY;LANGUAGE=en-us:Team Meeting
-        DTSTART:20130610T120000Z
-        DURATION:PT1H
-        RRULE:FREQ=WEEKLY;INTERVAL=2
-        END:VEVENT
-        
-       
-        
-        END:VCALENDAR
-        
-        """.trimIndent()
+//    private val initialFileOpenUri =
+//        Uri.parse(Environment.getExternalStorageDirectory().absolutePath + "/Download/")
 
 
-    fun readIcs3() {
-        val directory =
-            Environment.getExternalStorageDirectory().absolutePath + "/Download/Ics_file.ics"
-        val dir = File(directory)
-        println(dir.name)
-        println(dir.exists())
-
-        if (dir.name.lowercase(Locale.getDefault()).endsWith("ics")) {
-
-            val fin = UnfoldingReader(
-                FileReader(dir),
-                true
-            )
-
-            val builder = CalendarBuilder()
-            val calendar = builder.build(fin)
-            val events = calendar.components.getComponents(VEVENT)
-            for (event in events) {
-                val nE: VEvent = event as VEvent
-
-                val eventSummary = nE.summary.toString()
-                val eventLocation = nE.location.toString()
-                this.events.add(Event(summary = eventSummary, location = eventLocation))
-            }
-        }
-    }
 
 
-    fun getEvents(): MutableList<Event> {
-        return events
-    }
 
-    fun readInputStream(inputStream: InputStream?): ICSReaderResult {
+    fun readInputStream(inputStream: InputStream?): ICSHandlerResult {
 //        val fin = UnfoldingReader(  //TODO to open using file path
 //            FileReader(selectedFile),
 //            true
@@ -141,14 +72,14 @@ class ICSReader @Inject constructor() {
                 this.events.add(event)
             }
 
-            ICSReaderResult.Success(this.events)
+            ICSHandlerResult.Success(this.events)
         } catch (e: Exception) {
-            ICSReaderResult.Error("errorOpeningFile")
+            ICSHandlerResult.Error("errorOpeningFile")
         }
     }
 
 
-    suspend fun openFromUrl2(inputUrl: String?): ICSReaderResult =
+    suspend fun openFromUrl2(inputUrl: String?): ICSHandlerResult =
         try {
             withContext(Dispatchers.IO) {
                 val url = URL(inputUrl)
@@ -156,11 +87,11 @@ class ICSReader @Inject constructor() {
                 readInputStream(inputStream)
             }
         } catch (e: Exception) {
-            ICSReaderResult.Error("errorOpeningUrl")
+            ICSHandlerResult.Error("errorOpeningUrl")
         }
 
 
-    fun createCalender(createdEventsList: List<Event>, filesDir: File): ICSReaderResult {
+    fun createCalender(createdEventsList: List<Event>): ICSHandlerResult {
         return try {
             val icsCalendar = Calendar()
             icsCalendar.properties.add(ProdId("-//Ben Fortuna//iCal4j 1.0//EN"))
@@ -225,18 +156,19 @@ class ICSReader @Inject constructor() {
                 // Add the event and print
                 icsCalendar.components.add(vEvent)
             }
-            saveIcsfile(filesDir = filesDir, icsCalendar = icsCalendar)
+            saveIcsfile(icsCalendar = icsCalendar)
         } catch (e: Exception) {
-            ICSReaderResult.Error("errorCreatingCalander")
+            ICSHandlerResult.Error("errorCreatingCalander")
         }
 
     }
 
     private fun saveIcsfile(
-        filesDir: File,
         filename: String = "myIcs.ics",
         icsCalendar: Calendar
-    ): ICSReaderResult {
+    ): ICSHandlerResult {
+
+        val filesDir  = Environment.getStorageDirectory().absolutePath
         val file = File(filesDir, filename) //context.getFilesDir()  //TODO is this ok?
 
         var fout: FileOutputStream? = null
@@ -247,7 +179,7 @@ class ICSReader @Inject constructor() {
             readInputStream(FileInputStream(file))  //TODO if it shows up in files, this can be done manually.
 
         } catch (e: java.lang.Exception) {
-            ICSReaderResult.Error("errorSavingFile")
+            ICSHandlerResult.Error("errorSavingFile")
         }
     }
 
@@ -257,10 +189,14 @@ class ICSReader @Inject constructor() {
             val uidGenerator = UidGenerator("1")
             uidGenerator.generateUid()
         }
+
+    fun getEvents(): MutableList<Event> {
+        return events
+    }
 }
 
 
-sealed class ICSReaderResult {
-    data class Success(val data: List<Event>) : ICSReaderResult()
-    data class Error(val message: String) : ICSReaderResult()
+sealed class ICSHandlerResult {
+    data class Success(val data: List<Event>) : ICSHandlerResult()
+    data class Error(val message: String) : ICSHandlerResult()
 }

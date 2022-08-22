@@ -1,6 +1,7 @@
 package com.nsi.ezcalender
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,7 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.nsi.ezcalender.impl.ICSReader
+import com.nsi.ezcalender.impl.ICSHandler
 import com.nsi.ezcalender.ui.EzCalenderApp
 import com.nsi.ezcalender.ui.theme.EzCalenderTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,7 @@ var PERMISSIONS = arrayOf(
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var icsReader: ICSReader
+    lateinit var icsHandler: ICSHandler
 
 
     private val requestPermissionLauncher =
