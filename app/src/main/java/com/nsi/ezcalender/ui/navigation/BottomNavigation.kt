@@ -44,7 +44,7 @@ fun BottomNavigationThing(
                         restoreState = true
                     }
                 },
-                icon = { item.icon }
+                icon = { Icon(imageVector = item.icon, contentDescription = "c-d") }
             )
         }
 
