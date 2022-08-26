@@ -482,7 +482,7 @@ fun CreateEventDialog(
                                             dtEnd = dateEndObject, //dateEndText.text,
                                             location = locationText.text.ifEmpty { "" },
                                             geo = geoText.text.ifEmpty { "0;0" },
-                                            url = urlText.text.ifEmpty { "link.com" }
+                                            url = urlText.text.ifEmpty { "" }
                                         )
                                         saveEvent(event, createAnotherEventCheck)
                                     }) {

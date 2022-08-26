@@ -30,9 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
 import com.nsi.ezcalender.model.Event
-import com.nsi.ezcalender.ui.common.ConfirmationAlertDialog
-import com.nsi.ezcalender.ui.common.CreateEventDialog
-import com.nsi.ezcalender.ui.common.ViewEventDialog
+import com.nsi.ezcalender.ui.common.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -75,6 +73,22 @@ fun CreateFileScreen(
             mainViewModel.clearCreatedEvents()
         }
     )
+
+    if (state.isLoading) {
+        LoadingAlertDialog(
+            stringResource(id = R.string.loadingTitle),
+            stringResource(id = R.string.loadingDescription),
+            false
+        ) {}
+    } else if (state.error != null) {
+        LoadingAlertDialog(
+            stringResource(id = R.string.errorTitle),
+            getResourceByName(state.error.message),
+            true
+        ) {
+            mainViewModel.onErrorCleared()
+        }
+    }
 
     BackHandler {
         navigateUp()

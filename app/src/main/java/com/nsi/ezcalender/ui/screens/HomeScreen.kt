@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import com.nsi.ezcalender.MainViewModel
 import com.nsi.ezcalender.R
 import com.nsi.ezcalender.State
+import com.nsi.ezcalender.ui.common.LoadingAlertDialog
+import com.nsi.ezcalender.ui.common.getResourceByName
 
 
 @Composable
@@ -35,8 +37,9 @@ fun HomeScreen(
     navigateToCreateFileScreen: () -> Unit
 
 ) {
-    val state = mainVewModel.state
+    val state = mainVewModel.state.value
     val context = LocalContext.current
+
 
     val intent = remember {
         Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -74,11 +77,27 @@ fun HomeScreen(
         navigateToReadFileScreen()
     }
 
+    if (state.isLoading) {
+        LoadingAlertDialog(
+            stringResource(id = R.string.loadingTitle),
+            stringResource(id = R.string.loadingDescription),
+            false
+        ) {}
+    } else if (state.error != null) {
+        LoadingAlertDialog(
+            stringResource(id = R.string.errorTitle),
+            getResourceByName(state.error.message),
+            true
+        ) {
+            mainVewModel.onErrorCleared()
+        }
+    }
+
 }
 
 @Composable
 fun HomeScreenContent(
-    state: MutableState<State>,
+    state: State,
     openFileClicked: () -> Unit = {},
     createNewFileClicked: () -> Unit = {},
     openFromUrlCLicked: (String) -> Unit = {}
@@ -95,7 +114,7 @@ fun HomeScreenContent(
             mutableStateOf(true)
         }
 
-        var text by rememberSaveable { mutableStateOf(state.value.icsFileUrl ?: "") }
+        var text by rememberSaveable { mutableStateOf(state.icsFileUrl ?: "") }
         var animateLogo by rememberSaveable { mutableStateOf(true) }
         val interactionSource = remember { MutableInteractionSource() }
 

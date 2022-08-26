@@ -43,10 +43,12 @@
     <!--    Alert Dialog-->
     <string name="loadingTitle">लोड्यते</string>
     <string name="loadingDescription">सामग्री लोड भवति</string>
-    <string name="errorTitle" translatable="false">दोषः</string>
-    <string name="errorOpeningFile" translatable="false">सञ्चिका उद्घाटन त्रुटि</string>
-    <string name="errorOpeningUrl" translatable="false">यू आर एल उद्घाटन त्रुटि</string>
-    <string name="unknownError" translatable="false">अज्ञात दोषः</string>
+    <string name="errorTitle">दोषः</string>
+    <string name="errorOpeningFile">सञ्चिका उद्घाटन त्रुटि</string>
+    <string name="errorOpeningUrl">यू आर एल उद्घाटन त्रुटि</string>
+    <string name="unknownError">अज्ञात दोषः</string>
     <string name="exportOrSaveDescription" >किं भवान् निश्चितरूपेण आई-पञ्चाङ्गम् निर्यातयितुम् इच्छति?</string>
+    <string name="errorSavingFile">सञ्चिकां रक्षितुं त्रुटिः</string>
+    <string name="errorCreatingCalender">पञ्चाङ्गं निर्मातुं त्रुटिः</string>
 
 </resources>

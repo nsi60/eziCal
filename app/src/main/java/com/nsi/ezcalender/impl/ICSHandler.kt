@@ -158,7 +158,8 @@ class ICSHandler @Inject constructor() {
             }
             saveIcsfile(icsCalendar = icsCalendar)
         } catch (e: Exception) {
-            ICSHandlerResult.Error("errorCreatingCalander")
+            e.printStackTrace()
+            ICSHandlerResult.Error("errorCreatingCalender")
         }
 
     }
@@ -168,17 +169,19 @@ class ICSHandler @Inject constructor() {
         icsCalendar: Calendar
     ): ICSHandlerResult {
 
-        val filesDir  = Environment.getStorageDirectory().absolutePath
-        val file = File(filesDir, filename) //context.getFilesDir()  //TODO is this ok?
+        // Environment.getStorageDirectory().absolutePath //TODO this was working before, not anymore
+        val filesDir  = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val file = File(filesDir, filename) //context.getFilesDir()
 
         var fout: FileOutputStream? = null
         return try {
             fout = FileOutputStream(file)
             val outputter = CalendarOutputter()
-            outputter.output(icsCalendar, fout)  //TODO doesnt show up in files.
-            readInputStream(FileInputStream(file))  //TODO if it shows up in files, this can be done manually.
+            outputter.output(icsCalendar, fout)
+            readInputStream(FileInputStream(file))
 
         } catch (e: java.lang.Exception) {
+            e.printStackTrace()
             ICSHandlerResult.Error("errorSavingFile")
         }
     }

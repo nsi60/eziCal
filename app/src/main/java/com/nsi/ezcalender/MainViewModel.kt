@@ -99,7 +99,6 @@ class MainViewModel @Inject constructor(private val icsHandler: ICSHandler) : Vi
     fun exportCreatedEvents() {
         val result = icsHandler.createCalender(state.value.createdEventsList.toList())
         processResult(result)
-
     }
 
     private fun processResult(result: ICSHandlerResult) {
@@ -115,6 +114,10 @@ class MainViewModel @Inject constructor(private val icsHandler: ICSHandler) : Vi
 
     fun clearCreatedEvents() {
         _state.value.createdEventsList.clear()
+    }
+
+    fun onErrorCleared() {
+        _state.value = state.value.copy(error = null)
     }
 
 }

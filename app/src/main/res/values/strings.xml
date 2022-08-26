@@ -43,10 +43,12 @@
     <string name="loadingTitle">Loading</string>
     <string name="loadingDescription">Loading Stuff</string>
     <string name="errorTitle" >Error</string>
-    <string name="errorOpeningFile">errorOpeningFile</string>
-    <string name="errorOpeningUrl" >errorOpeningUrl</string>
-    <string name="unknownError" >unknownError</string>
+    <string name="errorOpeningFile">Error Opening File</string>
+    <string name="errorOpeningUrl" >Error Opening Url</string>
+    <string name="unknownError" >Unknown Error</string>
     <string name="exportOrSaveDescription" >Are you sure you want to export the iCalendar?</string>
+    <string name="errorSavingFile">Error Saving File</string>
+    <string name="errorCreatingCalender">Error CC </string>
 
 
 </resources>

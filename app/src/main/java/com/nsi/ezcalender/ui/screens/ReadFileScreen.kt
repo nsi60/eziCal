@@ -59,7 +59,7 @@ fun ReadFileScreen(
             getResourceByName(state.error.message),
             true
         ) {
-            navigateUp()
+            mainViewModel.onErrorCleared()
         }
     }
 
