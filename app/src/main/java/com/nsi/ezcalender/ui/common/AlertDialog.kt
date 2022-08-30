@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -366,7 +367,7 @@ fun CreateEventDialog(
                                 placeHolder = stringResource(id = R.string.eventTimePlaceholder),
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        painter = painterResource(R.drawable.icon_clock),
                                         contentDescription = "c-d"
                                     )
                                 }
@@ -406,7 +407,7 @@ fun CreateEventDialog(
                                 placeHolder = stringResource(id = R.string.eventTimePlaceholder),
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        painter = painterResource(R.drawable.icon_clock),
                                         contentDescription = "c-d"
                                     )
                                 }
@@ -594,7 +595,7 @@ fun ViewEventDialog(
                                 label = stringResource(id = R.string.eventStartTimeLabel),
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        painter = painterResource(R.drawable.icon_clock),
                                         contentDescription = "c-d"
                                     )
                                 }
@@ -632,7 +633,7 @@ fun ViewEventDialog(
                                 label = stringResource(id = R.string.eventEndTimeLabel),
                                 trailingIcon = {
                                     Icon(
-                                        imageVector = Icons.Default.Star,
+                                        painter = painterResource(R.drawable.icon_clock),
                                         contentDescription = "c-d"
                                     )
                                 }
